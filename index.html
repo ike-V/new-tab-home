@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Tab</title>
+<style>
+  :root{
+    --glass-bg: rgba(20,20,20,0.35);
+    --glass-border: rgba(255,255,255,0.18);
+    --text: #ffffff;
+    --text-dim: rgba(255,255,255,0.75);
+  }
+  *{ box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; height:100%; width:100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    overflow:hidden;
+    color: var(--text);
+  }
+  #bg{
+    position:fixed; inset:0;
+    background-size:cover;
+    background-position:center;
+    background-color:#1a1a1a;
+    transition: background-image 0.6s ease-in-out;
+    z-index:-2;
+  }
+  #bg::after{
+    content:"";
+    position:absolute; inset:0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.35));
+    z-index:-1;
+  }
+  #bg-fallback-note{
+    position:fixed; bottom:16px; left:16px;
+    font-size:12px; color:var(--text-dim);
+    max-width:260px; line-height:1.4;
+    background:var(--glass-bg); backdrop-filter: blur(10px);
+    padding:8px 12px; border-radius:10px;
+    border:1px solid var(--glass-border);
+    display:none;
+  }
+
+  .center{
+    height:100%; width:100%;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    gap:28px;
+  }
+
+  #clock{
+    font-size:64px; font-weight:700;
+    text-shadow:0 2px rgba(0,0,0,0.35);
+    letter-spacing:1px;
+    line-height:1;
+    text-align: center;
+  }
+  #date{
+    margin-top:0px;
+    font-size:16px; font-weight:400;
+    color: var(--text-dim);
+    text-shadow:0 1px 10px rgba(0,0,0,0.35);
+    text-align: center;
+  }
+
+  form#search-form{
+    width:min(560px, 86vw);
+    position:relative;
+  }
+  #search{
+    width:100%;
+    padding:16px 22px;
+    font-size:16px;
+    border-radius:999px;
+    border:1px solid var(--glass-border);
+    background:var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    color:var(--text);
+    outline:none;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  }
+  #search::placeholder{ color: var(--text-dim); }
+  #search:focus{ border-color: rgba(255,255,255,0.4); }
+
+  .engine-toggle{
+    position:absolute; top:50%; right:8px; transform:translateY(-50%);
+    width:34px; height:34px; border-radius:50%;
+    border:1px solid var(--glass-border); background:rgba(255,255,255,0.08);
+    cursor:pointer; padding:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .engine-toggle img{ width:18px; height:18px; border-radius:4px; }
+  .engine-menu{
+    position:absolute; top:calc(100% + 8px); right:0;
+    width:200px;
+    max-height:min(320px, 60vh);
+    overflow-y:auto;
+    background:var(--glass-bg); backdrop-filter: blur(16px);
+    border:1px solid var(--glass-border); border-radius:14px;
+    padding:6px; display:none; flex-direction:column; gap:2px;
+    box-shadow:0 10px 40px rgba(0,0,0,0.4);
+    z-index:5;
+  }
+  .engine-menu.open{ display:flex; }
+  .engine-menu.flip-up{ top:auto; bottom:calc(100% + 8px); }
+  .engine-menu button{
+    display:flex; align-items:center; gap:10px;
+    padding:8px 10px; border-radius:8px; border:none; background:none;
+    color:var(--text); font-size:13px; text-align:left; cursor:pointer;
+  }
+  .engine-menu button:hover{ background:rgba(255,255,255,0.12); }
+  .engine-menu img{ width:18px; height:18px; border-radius:4px; }
+
+  #toolbar{
+    position:fixed; top:16px; right:16px;
+    display:flex; gap:8px;
+  }
+  .tool-btn{
+    width:36px; height:36px; border-radius:50%;
+    background:var(--glass-bg); backdrop-filter: blur(12px);
+    border:1px solid var(--glass-border);
+    color:var(--text); cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px;
+    padding:0;
+    appearance:none; -webkit-appearance:none;
+    font-family:inherit;
+  }
+  .tool-btn:hover{ background:rgba(255,255,255,0.2); }
+
+  #drop-hint{
+    position:fixed; inset:0; display:none;
+    align-items:center; justify-content:center;
+    background:rgba(0,0,0,0.5); z-index:10;
+    font-size:22px; color:#fff; pointer-events:none;
+  }
+  #drop-hint.show{ display:flex; }
+</style>
+</head>
+<body>
+
+<div id="bg"></div>
+<div id="bg-fallback-note">No wallpaper folder connected yet. Click the ⛭ button (top right) to choose one, or drag & drop images anywhere on this page.</div>
+
+<div class="center">
+  <div>
+    <div id="clock">--:--</div>
+    <div id="date">-</div>
+  </div>
+
+  <div>
+    <form id="search-form">
+      <input id="search" type="text" placeholder="Search the web…" autofocus autocomplete="off">
+      <button type="button" id="engine-toggle" class="engine-toggle" title="Choose search engine"></button>
+      <div id="engine-menu" class="engine-menu"></div>
+    </form>
+  </div>
+
+</div>
+
+<div id="toolbar">
+ <button type="button" class="tool-btn" id="wallpaper-btn" title="Wallpaper settings">⛭</button>
+</div>
+
+<div id="drop-hint">Drop images to add them as wallpapers</div>
+
+<script>
+(function(){
+
+  /* ---------- storage helpers (fail gracefully if storage is blocked) ---------- */
+  function lsGet(key){ try{ return localStorage.getItem(key); }catch{ return null; } }
+  function lsSet(key,val){ try{ localStorage.setItem(key,val); }catch{} }
+
+  const DB_NAME = 'ht-homepage', STORE = 'kv';
+  function idb(){
+    return new Promise((resolve, reject)=>{
+      try{
+        const req = indexedDB.open(DB_NAME, 1);
+        req.onupgradeneeded = ()=> req.result.createObjectStore(STORE);
+        req.onsuccess = ()=> resolve(req.result);
+        req.onerror = ()=> reject(req.error);
+      }catch(e){ reject(e); }
+    });
+  }
+  async function idbGet(key){
+    try{
+      const db = await idb();
+      return await new Promise((resolve,reject)=>{
+        const tx = db.transaction(STORE,'readonly');
+        const r = tx.objectStore(STORE).get(key);
+        r.onsuccess = ()=> resolve(r.result);
+        r.onerror = ()=> reject(r.error);
+      });
+    }catch(e){ return null; }
+  }
+  async function idbSet(key,val){
+    try{
+      const db = await idb();
+      return await new Promise((resolve,reject)=>{
+        const tx = db.transaction(STORE,'readwrite');
+        tx.objectStore(STORE).put(val,key);
+        tx.oncomplete = ()=> resolve();
+        tx.onerror = ()=> reject(tx.error);
+      });
+    }catch(e){ }
+  }
+  async function idbAdd(storeKeyPrefix, val){
+    const key = storeKeyPrefix + ':' + Date.now() + ':' + Math.random().toString(36).slice(2);
+    await idbSet(key, val);
+    return key;
+  }
+  async function idbAllKeysWithPrefix(prefix){
+    try{
+      const db = await idb();
+      return await new Promise((resolve,reject)=>{
+        const tx = db.transaction(STORE,'readonly');
+        const req = tx.objectStore(STORE).getAllKeys();
+        req.onsuccess = ()=> resolve(req.result.filter(k=>k.startsWith(prefix)));
+        req.onerror = ()=> reject(req.error);
+      });
+    }catch(e){return []; }
+  }
+
+  /* ---------- clock ---------- */
+  const clockEl = document.getElementById('clock');
+  const dateEl = document.getElementById('date');
+  function tick(){
+    const now = new Date();
+    clockEl.textContent = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    dateEl.textContent = now.toLocaleDateString([], {weekday:'long', month:'long', day:'numeric'});
+  }
+  tick(); setInterval(tick, 1000*10);
+
+  /* ---------- search ---------- */
+  const ENGINES = {
+    google:      {name:'Google',       url:'https://www.google.com/search?q='},
+    bing:        {name:'Bing',         url:'https://www.bing.com/search?q='},
+    duckduckgo:  {name:'DuckDuckGo',   url:'https://duckduckgo.com/?q='},
+    brave:       {name:'Brave Search', url:'https://search.brave.com/search?q='},
+    startpage:   {name:'Startpage',    url:'https://www.startpage.com/do/search?q='},
+    wikipedia:   {name:'Wikipedia',    url:'https://en.wikipedia.org/w/index.php?search='},
+    reddit:      {name:'Reddit',       url:'https://www.reddit.com/search/?q='},
+    youtube:      {name:'YouTube',       url:'https://www.youtube.com/results?search_query='},
+    youtubemusic: {name:'YouTube Music', url:'https://music.youtube.com/search?q='},
+    wallhaven:    {name:'Wallhaven',     url:'https://wallhaven.cc/search?q='},
+  };
+
+  let currentEngine = lsGet('engine') || 'google';
+  const engineToggle = document.getElementById('engine-toggle');
+  const engineMenu = document.getElementById('engine-menu');
+
+  function updateEngineToggleIcon(){
+    engineToggle.innerHTML = `<img src="${faviconFor(ENGINES[currentEngine].url)}" alt="${ENGINES[currentEngine].name}">`;
+  }
+  function renderEngineMenu(){
+    engineMenu.innerHTML = '';
+    Object.entries(ENGINES).forEach(([key, val])=>{
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.innerHTML = `<img src="${faviconFor(val.url)}"> ${val.name}`;
+      btn.addEventListener('click', ()=>{
+        currentEngine = key;
+        lsSet('engine', currentEngine);
+        updateEngineToggleIcon();
+        engineMenu.classList.remove('open');
+      });
+      engineMenu.appendChild(btn);
+    });
+  }
+  renderEngineMenu();
+  updateEngineToggleIcon();
+
+  function positionEngineMenu(){
+    const formRect = document.getElementById('search-form').getBoundingClientRect();
+    const spaceBelow = window.innerHeight - formRect.bottom - 8;
+    const spaceAbove = formRect.top - 8;
+    if(spaceBelow < engineMenu.scrollHeight && spaceAbove > spaceBelow){
+      engineMenu.classList.add('flip-up');
+    } else {
+      engineMenu.classList.remove('flip-up');
+    }
+  }
+  engineToggle.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    const opening = !engineMenu.classList.contains('open');
+    engineMenu.classList.toggle('open');
+    if(opening) positionEngineMenu();
+  });
+  document.addEventListener('click', (e)=>{
+    if(!engineMenu.contains(e.target) && e.target !== engineToggle){
+      engineMenu.classList.remove('open');
+    }
+  });
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape') engineMenu.classList.remove('open');
+  });
+
+  document.getElementById('search-form').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const q = document.getElementById('search').value.trim();
+    if(!q) return;
+    // allow typing a bare URL
+    if(/^https?:\/\//i.test(q)){
+      location.href = q;
+    } else if(/^[\w-]+(\.[\w-]+)+(\/.*)?$/.test(q) && !q.includes(' ')){
+      location.href = 'https://' + q;
+    } else {
+      location.href = ENGINES[currentEngine].url + encodeURIComponent(q);
+    }
+  });
+
+  /* ---------- favicon helper ---------- */
+
+  function faviconFor(url){
+    try{
+      const u = new URL(url);
+      return `https://www.google.com/s2/favicons?domain=${u.hostname}&sz=64`;
+    }catch{ return ''; }
+  }
+
+  /* ---------- wallpaper ---------- */
+  const bgEl = document.getElementById('bg');
+  const fallbackNote = document.getElementById('bg-fallback-note');
+  const IMG_RE = /\.(jpe?g|png|webp|gif|avif|bmp)$/i;
+  let currentObjectUrl = null;
+  let dirHandle = null;
+  let needsReconnect = false;
+
+  function setBackground(url){
+    bgEl.style.backgroundImage = `url("${url}")`;
+  }
+
+  function showCachedInstantly(){
+    const cached = lsGet('lastWallpaperDataUrl');
+    if(cached) setBackground(cached);
+  }
+
+  async function cacheAsDataUrl(blob){
+    if(blob.size > 4*1024*1024) return;
+    const reader = new FileReader();
+    return new Promise(resolve=>{
+      reader.onload = ()=>{
+        lsSet('lastWallpaperDataUrl', reader.result);
+        resolve();
+      };
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function pickRandomFromDirHandle(handle){
+    const files = [];
+    for await (const entry of handle.values()){
+      if(entry.kind === 'file' && IMG_RE.test(entry.name)) files.push(entry);
+    }
+    if(files.length === 0) return false;
+    const chosen = files[Math.floor(Math.random()*files.length)];
+    const file = await chosen.getFile();
+    if(currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
+    currentObjectUrl = URL.createObjectURL(file);
+    setBackground(currentObjectUrl);
+    cacheAsDataUrl(file);
+    fallbackNote.style.display = 'none';
+    return true;
+  }
+
+  async function pickRandomFromDroppedPool(){
+    const keys = await idbAllKeysWithPrefix('dropped:');
+    if(keys.length === 0) return false;
+    const key = keys[Math.floor(Math.random()*keys.length)];
+    const blob = await idbGet(key);
+    if(!blob) return false;
+    if(currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
+    currentObjectUrl = URL.createObjectURL(blob);
+    setBackground(currentObjectUrl);
+    fallbackNote.style.display = 'none';
+    return true;
+  }
+
+  async function verifyPermission(handle){
+    const opts = {mode:'read'};
+    if((await handle.queryPermission(opts)) === 'granted') return true;
+    return false;
+  }
+
+  async function initWallpaper(){
+    showCachedInstantly();
+
+    if(!('showDirectoryPicker' in window)){
+      fallbackNote.textContent = 'This browser does not support folder access. Drag & drop images anywhere to use them as wallpapers.';
+      fallbackNote.style.display = 'block';
+      await pickRandomFromDroppedPool();
+      return;
+    }
+
+    const saved = await idbGet('dirHandle');
+    if(saved){
+      const granted = await verifyPermission(saved);
+      if(granted){
+        dirHandle = saved;
+        const ok = await pickRandomFromDirHandle(dirHandle);
+        if(!ok) fallbackNote.style.display = 'block';
+        return;
+      } else {
+        fallbackNote.textContent = 'Wallpaper folder needs permission again — click the ⛭ button (top right).';
+        fallbackNote.style.display = 'block';
+        dirHandle = saved;
+        needsReconnect = true;
+      }
+    } else {
+      const ok = await pickRandomFromDroppedPool();
+      if(!ok) fallbackNote.style.display = 'block';
+    }
+  }
+  document.getElementById('wallpaper-btn').addEventListener('click', async ()=>{
+    try{
+      if(needsReconnect && dirHandle){
+        const perm = await dirHandle.requestPermission({mode:'read'});
+        if(perm === 'granted'){
+          needsReconnect = false;
+          await pickRandomFromDirHandle(dirHandle);
+          return;
+        }
+      }
+      const handle = await window.showDirectoryPicker();
+      needsReconnect = false;
+      await idbSet('dirHandle', handle);
+      dirHandle = handle;
+      await pickRandomFromDirHandle(handle);
+    }catch(err){
+      if(err.name !== 'AbortError'){
+        fallbackNote.textContent = 'Could not access that folder: ' + err.message;
+        fallbackNote.style.display = 'block';
+      }
+    }
+  });
+
+  /* ---------- drag & drop fallback ---------- */
+  const dropHint = document.getElementById('drop-hint');
+  let dragCounter = 0;
+  document.addEventListener('dragenter', (e)=>{
+    e.preventDefault(); dragCounter++;
+    dropHint.classList.add('show');
+  });
+  document.addEventListener('dragleave', ()=>{
+    dragCounter--; if(dragCounter<=0){ dragCounter=0; dropHint.classList.remove('show'); }
+  });
+  document.addEventListener('dragover', (e)=> e.preventDefault());
+  document.addEventListener('drop', async (e)=>{
+    e.preventDefault();
+    dragCounter = 0;
+    dropHint.classList.remove('show');
+    const files = Array.from(e.dataTransfer.files).filter(f=> f.type.startsWith('image/'));
+    if(files.length === 0) return;
+    for(const f of files) await idbAdd('dropped', f);
+    await pickRandomFromDroppedPool();
+  });
+
+  initWallpaper();
+
+})();
+</script>
+</body>
+</html>
