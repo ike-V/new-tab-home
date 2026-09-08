@@ -6,9 +6,9 @@ rotates randomly through a folder of your own images on every new tab.
 
 ## Screenshots
 
-| Default view | Search engine picker | Another wallpaper |
-|---|---|---|
-| ![Default view with clock, search bar, and a wallpaper](screenshots/default-view.jpg) | ![Search engine dropdown open, showing Google, Bing, DuckDuckGo, Brave Search, Startpage, Wikipedia, Reddit, YouTube, and YouTube Music](screenshots/engine-picker.jpg) | ![A different wallpaper from the same folder, shown on another new tab](screenshots/wallpaper-example.jpg) |
+![Full page view with clock, search bar, and a wallpaper](screenshots/full-page.jpg)
+
+![Search engine dropdown open, showing Google, Bing, DuckDuckGo, Brave Search, Startpage, Wikipedia, Reddit, YouTube, and YouTube Music](screenshots/engine-picker.jpg)
 
 ## Requirements
 
