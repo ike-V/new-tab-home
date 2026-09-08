@@ -1,8 +1,7 @@
 # Custom New Tab Page
 
-A single-file New Tab page for Helium (or any Chromium-based browser that exposes a
-custom-new-tab-page flag): a clock, a multi-engine search bar, and a wallpaper that
-rotates randomly through a folder of your own images on every new tab.
+A New Tab page for any Chromium-based browser: a clock, a multi-engine search bar, and
+a wallpaper that rotates randomly through a folder of your own images on every new tab.
 
 ## Screenshots
 
@@ -12,11 +11,8 @@ rotates randomly through a folder of your own images on every new tab.
 
 ## Requirements
 
-- A Chromium-based browser with a **custom New Tab Page** flag. Confirmed working on
-  [Helium](https://helium.computer). Standard Chrome, Edge, and Brave do **not** expose
-  this flag — they only allow a New Tab override from an installed extension, not a raw
-  local file. If your browser doesn't have an equivalent flag, this won't work without
-  turning it into an extension, which this project doesn't do.
+- Any Chromium-based browser (Chrome, Edge, Brave, Helium, etc.) — see **Setup** below
+  for two ways to install it, depending on your browser.
 - For the wallpaper folder feature specifically: a browser that supports the
   [File System Access API](https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API)
   (`showDirectoryPicker`). This is Chromium-only, and some Chromium browsers disable it
@@ -25,9 +21,31 @@ rotates randomly through a folder of your own images on every new tab.
 
 ## Setup
 
+There are two ways to install this, depending on your browser. If you're not sure which
+applies, use the extension method — it works everywhere.
+
+### Option A: Load as an extension (any Chromium browser)
+
+This works on Chrome, Edge, Brave, Helium, or any other Chromium-based browser, with no
+flags involved.
+
+1. Download this whole repository (the **Code → Download ZIP** button on GitHub, or
+   `git clone`) and unzip it somewhere permanent — moving the folder later means
+   reloading the extension from its new location.
+2. Go to your browser's extensions page — `chrome://extensions`, `edge://extensions`,
+   `brave://extensions`, or `helium://extensions` — and enable **Developer mode**
+   (usually a toggle in the top-right corner).
+3. Click **Load unpacked** and select the folder containing `manifest.json`.
+4. Open a new tab to confirm it loads. If you edit the files later, come back to this
+   page and click the reload icon on the extension's card — a plain page refresh won't
+   pick up changes to `manifest.json` or `index.html`.
+
+### Option B: Browser flag (Helium and similar forks)
+
+Some Chromium forks — [Helium](https://helium.computer) confirmed — expose a flag that
+lets a raw local file serve as the New Tab page directly, without installing anything.
 Helium itself is available for macOS, Windows, and Linux from
-[imputnet/helium](https://github.com/imputnet/helium) — the `custom-ntp` flag used
-below is documented as working on all three.
+[imputnet/helium](https://github.com/imputnet/helium).
 
 1. Download `index.html` and put it somewhere permanent — moving it later means
    re-pointing the flag below.
