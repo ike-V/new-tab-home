@@ -97,12 +97,14 @@
     width:200px;
     max-height:min(320px, 60vh);
     overflow-y:auto;
+    scrollbar-width:none;
     background:var(--glass-bg); backdrop-filter: blur(16px);
     border:1px solid var(--glass-border); border-radius:14px;
     padding:6px; display:none; flex-direction:column; gap:2px;
     box-shadow:0 10px 40px rgba(0,0,0,0.4);
     z-index:5;
   }
+  .engine-menu::-webkit-scrollbar{ display:none; }
   .engine-menu.open{ display:flex; }
   .engine-menu.flip-up{ top:auto; bottom:calc(100% + 8px); }
   .engine-menu button{
