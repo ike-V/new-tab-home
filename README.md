@@ -1,4 +1,4 @@
-# Custom New Tab Page
+# New Tab ~/
 
 A New Tab page for any Chromium-based browser: a clock, a multi-engine search bar, and
 a wallpaper that rotates randomly through a folder of your own images on every new tab.
@@ -97,12 +97,16 @@ change something:
   Raise it for less repetition (needs a bigger photo folder to feel natural), lower it
   if you'd rather see more repeats.
 
-## Privacy note
+## Privacy
 
-Favicons (for the search-engine picker) are fetched from a public Google endpoint per
-engine, which means the engine's domain name is sent to Google on each page load. No
-other network requests happen — search queries, wallpaper images, and your engine
-choice never leave your machine unless you actually submit a search.
+No data leaves your browser except favicon lookups. The search-engine picker fetches
+each engine's icon from a public Google endpoint, which means that engine's domain name
+(e.g. "google.com", "wikipedia.org") is sent to Google every time the page loads —
+that's the one exception. Everything else stays entirely on your machine: your
+wallpaper images, which folder you connected, your chosen search engine, and anything
+you type into the search box are never transmitted anywhere, with the obvious exception
+of actually submitting a search — which sends that query to whichever engine you
+picked, the same as typing it directly into your browser's address bar would.
 
 ## Known limitations
 
