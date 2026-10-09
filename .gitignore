@@ -1,1 +1,10 @@
 .DS_Store
+
+# Store-listing and working screenshots (the two README images stay tracked)
+screenshots/screenshot*
+screenshots/Screenshot_*
+screenshots/Image.jpg
+*.psd
+
+# Built extension package
+store-assets/*.zip
