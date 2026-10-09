@@ -353,13 +353,25 @@
     });
   }
 
+  const RECENT_WALLPAPER_CAP = 20;
+
+  function pickAvoidingRecent(items, keyFn){
+    const recent = JSON.parse(lsGet('recentWallpapers') || '[]');
+    const cap = Math.min(RECENT_WALLPAPER_CAP, items.length - 1);
+    const avoid = new Set(cap > 0 ? recent.slice(-cap) : []);
+    const pool = items.filter(item => !avoid.has(keyFn(item)));
+    const chosen = pool[Math.floor(Math.random() * pool.length)];
+    lsSet('recentWallpapers', JSON.stringify(recent.concat(keyFn(chosen)).slice(-RECENT_WALLPAPER_CAP)));
+    return chosen;
+  }
+
   async function pickRandomFromDirHandle(handle){
     const files = [];
     for await (const entry of handle.values()){
       if(entry.kind === 'file' && IMG_RE.test(entry.name)) files.push(entry);
     }
     if(files.length === 0) return false;
-    const chosen = files[Math.floor(Math.random()*files.length)];
+    const chosen = pickAvoidingRecent(files, f => f.name);
     const file = await chosen.getFile();
     if(currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
     currentObjectUrl = URL.createObjectURL(file);
@@ -372,7 +384,7 @@
   async function pickRandomFromDroppedPool(){
     const keys = await idbAllKeysWithPrefix('dropped:');
     if(keys.length === 0) return false;
-    const key = keys[Math.floor(Math.random()*keys.length)];
+    const key = pickAvoidingRecent(keys, k => k);
     const blob = await idbGet(key);
     if(!blob) return false;
     if(currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
