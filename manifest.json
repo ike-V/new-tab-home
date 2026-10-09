@@ -3,6 +3,7 @@
   "name": "New Tab ~/",
   "version": "1.0.0",
   "description": "A custom New Tab page: clock, multi-engine search, and a wallpaper that rotates through a local image folder.",
+  "permissions": ["search"],
   "chrome_url_overrides": {
     "newtab": "index.html"
   },

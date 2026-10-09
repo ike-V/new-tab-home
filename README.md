@@ -79,8 +79,9 @@ only.
 
 ## Using it
 
-- **Wallpaper**: click the ⚙ button (top right) to pick a folder of images. A random
-  image from that folder is shown on every new tab. When the browser asks for folder
+- **Wallpaper**: click the ⚙ button (top right) to pick a folder of images. A note at
+  the bottom-left offers the same button on first run and when access needs
+  reconnecting. A random image from that folder is shown on every new tab. When the browser asks for folder
   access, choose **Allow on every visit** so it persists across restarts; if it asks
   again, click the ⚙ button to re-connect. On Helium, the extension install (Option A)
   offers that choice; the `file://` install (Option B) only offers a one-time allow,
@@ -89,9 +90,13 @@ only.
   and drag and drop also works. Chosen images are copied into the browser's local
   database and used the same way.
 - **Search**: type and hit Enter to search, or type a bare URL/domain to navigate
-  directly. Click the small icon at the right edge of the search bar to pick a
-  different search engine — the list includes Google, Bing, DuckDuckGo, Brave Search,
-  Startpage, Wikipedia, Reddit, YouTube, YouTube Music, and Wallhaven.
+  directly. Click the icon at the right edge of the search bar to pick an engine:
+  **Browser default** (extension installs only; uses your browser's own search engine
+  and is the default), Google, Bing, DuckDuckGo, Brave Search, Startpage, Wikipedia,
+  Reddit, YouTube, YouTube Music, or Wallhaven. Choose **+ Add search engine** to add
+  your own: a name and a URL with `%s` where the search term goes, such as
+  `https://example.com/search?q=%s`. Remove a custom engine with its ×. The `file://`
+  install (Option B) can't reach the browser default, so it defaults to Google.
 - **Keyboard shortcut**: press `/` anywhere on the page to jump into the search box.
 
 ## Customizing
@@ -100,9 +105,9 @@ Markup and styles are in `index.html`, behavior in `app.js`. A few starting poin
 you want to change something:
 
 - **Search engines**: edit the `ENGINES` object in `app.js` —
-  add, remove, or reorder entries. Each needs a `name` and a `url` with the query
-  parameter placed right before where the search term gets appended. Favicons are
-  fetched automatically from each engine's own domain, nothing extra to configure.
+  add, remove, or reorder entries. Each needs a `name` and a `url` with `%s` where the
+  search term goes. Favicons for these built-in entries are fetched automatically from
+  each engine's domain, nothing extra to configure.
 - **Colors / look**: the `:root` block at the top of the `<style>` section in `index.html` defines the
   glass-panel color, border color, and text colors used throughout — change those
   instead of hunting through individual rules.
@@ -114,13 +119,18 @@ you want to change something:
 ## Privacy
 
 No data leaves your browser except favicon lookups. The search-engine picker fetches
-each engine's icon from a public Google endpoint, which means that engine's domain name
-(e.g. "google.com", "wikipedia.org") is sent to Google every time the page loads —
-that's the one exception. Everything else stays entirely on your machine: your
+the built-in engines' icons from a public Google endpoint, which means those engines'
+domain names (e.g. "google.com", "wikipedia.org") are sent to Google every time the
+page loads — that's the one exception. Engines you add yourself get a generated letter
+icon and make no requests, so a private search address never leaves your browser.
+Everything else stays entirely on your machine: your
 wallpaper images, which folder you connected, your chosen search engine, and anything
 you type into the search box are never transmitted anywhere, with the obvious exception
 of actually submitting a search — which sends that query to whichever engine you
 picked, the same as typing it directly into your browser's address bar would.
+
+The extension requests one permission, `search`, used only to run your searches through
+the browser's default search engine.
 
 ## Known limitations
 
