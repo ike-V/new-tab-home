@@ -14,22 +14,19 @@ A custom New Tab page: clock, multi-engine search, and a wallpaper that rotates 
 **Description:**
 
 ```
-New Tab ~/ replaces your new tab page with a clean clock, a search bar, and a wallpaper drawn from a folder of images on your computer.
+Got a folder full of wallpapers you never see? New Tab ~/ puts them on your new tab page: pick a folder once, and every new tab shows a different image, with a clock and a search bar on top.
+
+Your images never leave your computer. There are no accounts, no tracking, and no ads.
 
 FEATURES
-• Wallpapers from your own folder. Pick a folder once; every new tab shows a different image. Recently shown images are avoided, so you don't see the same few over and over.
-• Persistent folder access. Choose "Allow on every visit" and the folder stays available across restarts.
-• Search with your browser's default engine, or pick another from the menu: Google, Bing, DuckDuckGo, Brave Search, Startpage, Wikipedia, Reddit, YouTube, YouTube Music, or Wallhaven.
-• Add your own search engines with a URL template (use %s where the query goes).
-• Clock and date, centered and readable over any image.
-• Press / anywhere on the page to focus the search bar.
-• No account, no tracking, no ads.
+• Wallpapers from your own folder, with recently shown images skipped so you don't see the same few over and over
+• "Allow on every visit" keeps the folder available across restarts
+• Search with your browser's default engine, or pick from the various built-in engine options
+• Add your own search engines with a URL template
+• Press / anywhere on the page to focus the search bar
 
 PRIVACY
-Your images never leave your computer. The extension has no server, no analytics, and no remote code. Searches go directly to the engine you choose. The only network requests the extension makes are favicon lookups for the built-in engines in the picker. Full policy: https://github.com/ike-V/new-tab-home/blob/main/PRIVACY.md
-
-GETTING STARTED
-Open a new tab, click the gear (top right), and choose your image folder. On phones or browsers without folder access, you can select image files instead.
+The extension has no server, no analytics, and no remote code. Searches go straight to the engine you choose. The only network requests it makes are favicon lookups for the built-in engines in the picker. Full policy: https://github.com/ike-V/new-tab-home/blob/main/PRIVACY.md
 
 Open source (MIT): https://github.com/ike-V/new-tab-home
 ```
