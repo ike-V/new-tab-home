@@ -11,8 +11,8 @@ a wallpaper that rotates randomly through a folder of your own images on every n
 
 ## Requirements
 
-- Any Chromium-based browser (Chrome, Edge, Brave, Helium, etc.) — see **Setup** below
-  for two ways to install it, depending on your browser.
+- Any Chromium-based browser (Chrome, Edge, Brave, Helium, etc.), or Titanium on
+  Android — see **Setup** below for how to install it.
 - For the wallpaper folder feature specifically: a browser that supports the
   [File System Access API](https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API)
   (`showDirectoryPicker`). This is Chromium-only, and some Chromium browsers disable it
@@ -30,8 +30,9 @@ This works on Chrome, Edge, Brave, Helium, or any other Chromium-based browser, 
 flags involved.
 
 1. Download this whole repository (the **Code → Download ZIP** button on GitHub, or
-   `git clone`) and unzip it somewhere permanent — moving the folder later means
-   reloading the extension from its new location.
+   `git clone`) and unzip it somewhere permanent. Don't move it afterwards: an unpacked
+   extension's ID comes from its folder path, so a new location is a new extension to
+   the browser (folder access and saved wallpapers reset).
 2. Go to your browser's extensions page — `chrome://extensions`, `edge://extensions`,
    `brave://extensions`, or `helium://extensions` — and enable **Developer mode**
    (usually a toggle in the top-right corner).
@@ -65,13 +66,25 @@ Helium itself is available for macOS, Windows, and Linux from
 3. Go to `helium://settings/onStartup` and choose **Open the New Tab Page**.
 4. Open a new tab (⌘T on macOS, Ctrl+T on Windows/Linux) to confirm it loads.
 
+### Android (Titanium)
+
+Chrome for Android can't run extensions;
+[Titanium](https://github.com/jqssun/android-titanium-browser) can. Tested on Titanium
+only.
+
+1. Download the repository ZIP and extract it on the phone.
+2. In Titanium, open `chrome://extensions`, enable **Developer mode**, tap **Load
+   unpacked**, and pick the extracted folder that contains `manifest.json`.
+3. Open a new tab. Use the ⚙ button to choose wallpaper images.
+
 ## Using it
 
 - **Wallpaper**: click the ⚙ button (top right) to pick a folder of images. A random
-  image from that folder is shown on every new tab. Your browser will occasionally ask
-  you to re-grant access to the folder — this happens after a full quit of the browser
-  (not just closing a window), and is normal Chromium permission behavior, not a bug.
-  Clicking the ⚙ button again re-connects it.
+  image from that folder is shown on every new tab. When the browser asks for folder
+  access, choose **Allow on every visit** so it persists across restarts; if it asks
+  again, click the ⚙ button to re-connect. On Helium, the extension install (Option A)
+  offers that choice; the `file://` install (Option B) only offers a one-time allow,
+  so access resets after each full browser quit.
 - **Touch device, or no folder access?** The ⚙ button opens an image chooser instead,
   and drag and drop also works. Chosen images are copied into the browser's local
   database and used the same way.
@@ -111,9 +124,8 @@ picked, the same as typing it directly into your browser's address bar would.
 
 ## Known limitations
 
-- The wallpaper folder connection can need re-approval after a full browser quit
-  (see above) — this is intentional browser security behavior, not something this
-  project can override.
+- With Option B (`file://`), folder access is one-time only and must be re-granted
+  after each full browser quit. Option A avoids this.
 - Live search-as-you-type suggestions aren't implemented. Most search engines don't
   expose a suggestion endpoint that's reachable from a plain webpage (no CORS support),
   so this was left out rather than half-implemented for only 2-3 engines.
