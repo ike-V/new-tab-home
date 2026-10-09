@@ -66,71 +66,194 @@
 
   /* ---------- search ---------- */
   const ENGINES = {
-    google:      {name:'Google',       url:'https://www.google.com/search?q='},
-    bing:        {name:'Bing',         url:'https://www.bing.com/search?q='},
-    duckduckgo:  {name:'DuckDuckGo',   url:'https://duckduckgo.com/?q='},
-    brave:       {name:'Brave Search', url:'https://search.brave.com/search?q='},
-    startpage:   {name:'Startpage',    url:'https://www.startpage.com/do/search?q='},
-    wikipedia:   {name:'Wikipedia',    url:'https://en.wikipedia.org/w/index.php?search='},
-    reddit:      {name:'Reddit',       url:'https://www.reddit.com/search/?q='},
-    youtube:      {name:'YouTube',       url:'https://www.youtube.com/results?search_query='},
-    youtubemusic: {name:'YouTube Music', url:'https://music.youtube.com/search?q='},
-    wallhaven:    {name:'Wallhaven',     url:'https://wallhaven.cc/search?q='},
+    google:       {name:'Google',        url:'https://www.google.com/search?q=%s'},
+    bing:         {name:'Bing',          url:'https://www.bing.com/search?q=%s'},
+    duckduckgo:   {name:'DuckDuckGo',    url:'https://duckduckgo.com/?q=%s'},
+    brave:        {name:'Brave Search',  url:'https://search.brave.com/search?q=%s'},
+    startpage:    {name:'Startpage',     url:'https://www.startpage.com/do/search?q=%s'},
+    wikipedia:    {name:'Wikipedia',     url:'https://en.wikipedia.org/w/index.php?search=%s'},
+    reddit:       {name:'Reddit',        url:'https://www.reddit.com/search/?q=%s'},
+    youtube:      {name:'YouTube',       url:'https://www.youtube.com/results?search_query=%s'},
+    youtubemusic: {name:'YouTube Music', url:'https://music.youtube.com/search?q=%s'},
+    wallhaven:    {name:'Wallhaven',     url:'https://wallhaven.cc/search?q=%s'},
   };
+  const SEARCH_ICON = 'data:image/svg+xml,' + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="10.5" r="6.5"/><path d="M16 15.5l4.5 4.5"/></svg>');
 
-  let currentEngine = lsGet('engine') || 'google';
+  const hasBrowserSearch = ()=> typeof chrome !== 'undefined' && !!chrome.search && typeof chrome.search.query === 'function';
+  const searchUrl = (template, q)=> template.replace('%s', ()=> encodeURIComponent(q));
+
+  function isValidTemplate(url){
+    if(typeof url !== 'string' || url.split('%s').length !== 2) return false;
+    try{
+      const u = new URL(url.replace('%s', 'x'));
+      return u.protocol === 'https:' || u.protocol === 'http:';
+    }catch{ return false; }
+  }
+  function loadCustomEngines(){
+    try{
+      const list = JSON.parse(lsGet('customEngines') || '[]');
+      return Array.isArray(list) ? list.filter(e => e && e.id && typeof e.name === 'string' && e.name && isValidTemplate(e.url)) : [];
+    }catch{ return []; }
+  }
+  function saveCustomEngines(list){ lsSet('customEngines', JSON.stringify(list)); }
+
+  function engineList(){
+    const list = [];
+    if(hasBrowserSearch()) list.push({key:'default', name:'Browser default', icon:SEARCH_ICON});
+    for(const [key, e] of Object.entries(ENGINES)){
+      list.push({key, name:e.name, url:e.url, icon:faviconFor(e.url.replace('%s', 'x'))});
+    }
+    for(const e of loadCustomEngines()){
+      list.push({key:'custom:' + e.id, id:e.id, name:e.name, url:e.url, custom:true, icon:null});
+    }
+    return list;
+  }
+  const fallbackEngine = ()=> hasBrowserSearch() ? 'default' : 'google';
+  let currentEngine = lsGet('engine');
+  const activeEngine = ()=>{
+    const list = engineList();
+    return list.find(e => e.key === currentEngine) || list.find(e => e.key === fallbackEngine());
+  };
+  currentEngine = activeEngine().key;
+
+  const searchWrap = document.getElementById('search-wrap');
+  const searchForm = document.getElementById('search-form');
+  const searchInput = document.getElementById('search');
   const engineToggle = document.getElementById('engine-toggle');
   const engineMenu = document.getElementById('engine-menu');
 
+  const makeIcon = src => { const img = document.createElement('img'); img.src = src; img.alt = ''; return img; };
+  const avatarHue = name => [...name].reduce((h, c) => (h * 31 + c.codePointAt(0)) >>> 0, 7) % 360;
+  const makeAvatar = name => {
+    const el = document.createElement('span');
+    el.className = 'engine-avatar';
+    el.textContent = [...name][0].toUpperCase();
+    el.style.background = 'hsl(' + avatarHue(name) + ',55%,42%)';
+    return el;
+  };
+  const engineIcon = e => e.icon ? makeIcon(e.icon) : makeAvatar(e.name);
+
+  const addBtn = document.createElement('button');
+  addBtn.type = 'button'; addBtn.className = 'engine-add'; addBtn.textContent = '+ Add search engine';
+  const addForm = document.createElement('div');
+  addForm.className = 'engine-form'; addForm.hidden = true;
+  addForm.innerHTML =
+    '<input class="ef-name" type="text" placeholder="Name" maxlength="30" autocomplete="off">' +
+    '<input class="ef-url" type="text" placeholder="https://example.com/search?q=%s" autocomplete="off">' +
+    '<div class="ef-error" role="alert"></div>' +
+    '<div class="ef-actions"><button type="button" class="ef-cancel">Cancel</button><button type="button" class="ef-save">Add</button></div>';
+  const nameInput = addForm.querySelector('.ef-name');
+  const urlInput = addForm.querySelector('.ef-url');
+  const formError = addForm.querySelector('.ef-error');
+
   function updateEngineToggleIcon(){
-    engineToggle.innerHTML = `<img src="${faviconFor(ENGINES[currentEngine].url)}" alt="${ENGINES[currentEngine].name}">`;
+    const e = activeEngine();
+    engineToggle.replaceChildren(engineIcon(e));
+    engineToggle.setAttribute('aria-label', 'Search engine: ' + e.name);
   }
   function renderEngineMenu(){
-    engineMenu.innerHTML = '';
-    Object.entries(ENGINES).forEach(([key, val])=>{
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.innerHTML = `<img src="${faviconFor(val.url)}"> ${val.name}`;
-      btn.addEventListener('click', ()=>{
-        currentEngine = key;
-        lsSet('engine', currentEngine);
-        updateEngineToggleIcon();
-        engineMenu.classList.remove('open');
-      });
-      engineMenu.appendChild(btn);
+    const rows = engineList().map(e => {
+      const row = document.createElement('div');
+      row.className = 'engine-row' + (e.key === currentEngine ? ' active' : '');
+      const pick = document.createElement('button');
+      pick.type = 'button'; pick.className = 'engine-pick';
+      const label = document.createElement('span');
+      label.textContent = e.name;
+      pick.append(engineIcon(e), label);
+      pick.addEventListener('click', ()=>{ selectEngine(e.key); closeEngineMenu(); });
+      row.append(pick);
+      if(e.custom){
+        const rm = document.createElement('button');
+        rm.type = 'button'; rm.className = 'engine-remove'; rm.textContent = '×';
+        rm.title = 'Remove ' + e.name;
+        rm.addEventListener('click', ()=> removeCustomEngine(e));
+        row.append(rm);
+      }
+      return row;
     });
+    engineMenu.replaceChildren(...rows, addBtn, addForm);
   }
-  renderEngineMenu();
-  updateEngineToggleIcon();
+  function selectEngine(key){
+    currentEngine = key;
+    lsSet('engine', key);
+    updateEngineToggleIcon();
+    renderEngineMenu();
+  }
+  function removeCustomEngine(e){
+    saveCustomEngines(loadCustomEngines().filter(x => x.id !== e.id));
+    if(currentEngine === e.key) selectEngine(fallbackEngine());
+    else renderEngineMenu();
+  }
 
+  function closeEngineForm(){
+    addForm.hidden = true; addBtn.hidden = false;
+    nameInput.value = ''; urlInput.value = ''; formError.textContent = '';
+  }
+  function closeEngineMenu(){
+    engineMenu.classList.remove('open');
+    closeEngineForm();
+  }
   function positionEngineMenu(){
-    const formRect = document.getElementById('search-form').getBoundingClientRect();
-    const spaceBelow = window.innerHeight - formRect.bottom - 8;
-    const spaceAbove = formRect.top - 8;
-    if(spaceBelow < engineMenu.scrollHeight && spaceAbove > spaceBelow){
-      engineMenu.classList.add('flip-up');
-    } else {
-      engineMenu.classList.remove('flip-up');
-    }
+    const rect = searchWrap.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom - 8;
+    const spaceAbove = rect.top - 8;
+    engineMenu.classList.toggle('flip-up', spaceBelow < engineMenu.scrollHeight && spaceAbove > spaceBelow);
   }
-  engineToggle.addEventListener('click', (e)=>{
-    e.stopPropagation();
-    const opening = !engineMenu.classList.contains('open');
-    engineMenu.classList.toggle('open');
-    if(opening) positionEngineMenu();
-  });
-  document.addEventListener('click', (e)=>{
-    if(!engineMenu.contains(e.target) && e.target !== engineToggle){
-      engineMenu.classList.remove('open');
+  function saveEngine(){
+    const name = nameInput.value.trim();
+    const url = urlInput.value.trim();
+    if(!name){ formError.textContent = 'Enter a name.'; nameInput.focus(); return; }
+    if(!isValidTemplate(url)){
+      formError.textContent = 'Enter an http(s) URL containing %s once, where the search term goes.';
+      urlInput.focus();
+      return;
     }
+    const id = Date.now().toString(36);
+    saveCustomEngines(loadCustomEngines().concat({id, name, url}));
+    selectEngine('custom:' + id);
+    closeEngineMenu();
+  }
+
+  addBtn.addEventListener('click', ()=>{
+    addBtn.hidden = true; addForm.hidden = false;
+    positionEngineMenu();
+    nameInput.focus();
   });
-  document.addEventListener('keydown', (e)=>{
-    if(e.key === 'Escape') engineMenu.classList.remove('open');
+  addForm.querySelector('.ef-cancel').addEventListener('click', closeEngineForm);
+  addForm.querySelector('.ef-save').addEventListener('click', saveEngine);
+  [nameInput, urlInput].forEach(input => input.addEventListener('keydown', e => {
+    if(e.key === 'Enter'){ e.preventDefault(); saveEngine(); }
+  }));
+  engineToggle.addEventListener('click', e => {
+    e.stopPropagation();
+    if(engineMenu.classList.contains('open')){ closeEngineMenu(); return; }
+    engineMenu.classList.add('open');
+    positionEngineMenu();
+  });
+  document.addEventListener('click', e => {
+    if(!e.composedPath().includes(engineMenu)) closeEngineMenu();
+  });
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape'){ closeEngineMenu(); return; }
+    if(e.key === '/' && !e.metaKey && !e.ctrlKey && !e.altKey && !/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)){
+      e.preventDefault();
+      searchInput.focus();
+    }
   });
 
-  document.getElementById('search-form').addEventListener('submit', (e)=>{
+  function runSearch(q){
+    const engine = activeEngine();
+    if(engine.key !== 'default'){ location.href = searchUrl(engine.url, q); return; }
+    const goGoogle = ()=>{ location.href = searchUrl(ENGINES.google.url, q); };
+    try{
+      const result = chrome.search.query({text: q, disposition: 'CURRENT_TAB'});
+      if(result && typeof result.catch === 'function') result.catch(goGoogle);
+    }catch{ goGoogle(); }
+  }
+  searchForm.addEventListener('submit', e => {
     e.preventDefault();
-    const q = document.getElementById('search').value.trim();
+    const q = searchInput.value.trim();
     if(!q) return;
     // allow typing a bare URL
     if(/^https?:\/\//i.test(q)){
@@ -138,9 +261,12 @@
     } else if(/^[\w-]+(\.[\w-]+)+(\/.*)?$/.test(q) && !q.includes(' ')){
       location.href = 'https://' + q;
     } else {
-      location.href = ENGINES[currentEngine].url + encodeURIComponent(q);
+      runSearch(q);
     }
   });
+
+  renderEngineMenu();
+  updateEngineToggleIcon();
 
   /* ---------- favicon helper ---------- */
 
@@ -154,6 +280,14 @@
   /* ---------- wallpaper ---------- */
   const bgEl = document.getElementById('bg');
   const fallbackNote = document.getElementById('bg-fallback-note');
+  const noteText = document.getElementById('note-text');
+  const noteAction = document.getElementById('note-action');
+  function showNote(text, actionLabel){
+    noteText.textContent = text;
+    noteAction.hidden = !actionLabel;
+    noteAction.textContent = actionLabel || '';
+    fallbackNote.style.display = 'block';
+  }
   const IMG_RE = /\.(jpe?g|png|webp|gif|avif|bmp)$/i;
   let currentObjectUrl = null;
   let dirHandle = null;
@@ -241,32 +375,32 @@
     showCachedInstantly();
 
     if(useImageChooser()){
-      fallbackNote.textContent = 'Use the ⛭ button (top right) to choose images, or drag & drop them onto the page.';
-      fallbackNote.style.display = 'block';
-      await pickRandomFromDroppedPool();
+      const ok = await pickRandomFromDroppedPool();
+      if(!ok) showNote(
+        matchMedia('(pointer: coarse)').matches
+          ? 'Pick images to use as your wallpaper.'
+          : 'Pick images to use as your wallpaper, or drop them onto the page.',
+        'Choose images');
       return;
     }
 
     const saved = await idbGet('dirHandle');
     if(saved){
-      const granted = await verifyPermission(saved);
-      if(granted){
-        dirHandle = saved;
+      dirHandle = saved;
+      if(await verifyPermission(saved)){
         const ok = await pickRandomFromDirHandle(dirHandle);
-        if(!ok) fallbackNote.style.display = 'block';
-        return;
+        if(!ok) showNote('No images found in your wallpaper folder.', 'Choose a different folder');
       } else {
-        fallbackNote.textContent = 'Wallpaper folder needs permission again — click the ⛭ button (top right).';
-        fallbackNote.style.display = 'block';
-        dirHandle = saved;
         needsReconnect = true;
+        showNote('Wallpaper folder needs permission again.', 'Reconnect folder');
       }
     } else {
       const ok = await pickRandomFromDroppedPool();
-      if(!ok) fallbackNote.style.display = 'block';
+      if(!ok) showNote('Choose a folder of images to use as your wallpaper.', 'Choose folder');
     }
   }
-  document.getElementById('wallpaper-btn').addEventListener('click', async ()=>{
+
+  async function chooseWallpaper(){
     if(useImageChooser()){
       wallpaperInput.click();
       return;
@@ -276,7 +410,7 @@
         const perm = await dirHandle.requestPermission({mode:'read'});
         if(perm === 'granted'){
           needsReconnect = false;
-          await pickRandomFromDirHandle(dirHandle);
+          if(!(await pickRandomFromDirHandle(dirHandle))) showNote('No images found in your wallpaper folder.', 'Choose a different folder');
           return;
         }
       }
@@ -284,14 +418,13 @@
       needsReconnect = false;
       await idbSet('dirHandle', handle);
       dirHandle = handle;
-      await pickRandomFromDirHandle(handle);
+      if(!(await pickRandomFromDirHandle(handle))) showNote('No images found in that folder.', 'Choose a different folder');
     }catch(err){
-      if(err.name !== 'AbortError'){
-        fallbackNote.textContent = 'Could not access that folder: ' + err.message;
-        fallbackNote.style.display = 'block';
-      }
+      if(err.name !== 'AbortError') showNote('Could not access that folder: ' + err.message, 'Try again');
     }
-  });
+  }
+  document.getElementById('wallpaper-btn').addEventListener('click', chooseWallpaper);
+  noteAction.addEventListener('click', chooseWallpaper);
 
   /* ---------- drag & drop fallback ---------- */
   const dropHint = document.getElementById('drop-hint');
