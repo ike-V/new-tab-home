@@ -38,7 +38,7 @@ flags involved.
 3. Click **Load unpacked** and select the folder containing `manifest.json`.
 4. Open a new tab to confirm it loads. If you edit the files later, come back to this
    page and click the reload icon on the extension's card — a plain page refresh won't
-   pick up changes to `manifest.json` or `index.html`.
+   pick up changes to `manifest.json`, `index.html`, or `app.js`.
 
 ### Option B: Browser flag (Helium and similar forks)
 
@@ -47,8 +47,8 @@ lets a raw local file serve as the New Tab page directly, without installing any
 Helium itself is available for macOS, Windows, and Linux from
 [imputnet/helium](https://github.com/imputnet/helium).
 
-1. Download `index.html` and put it somewhere permanent — moving it later means
-   re-pointing the flag below.
+1. Download `index.html` and `app.js` into the same folder, somewhere permanent —
+   moving it later means re-pointing the flag below.
 2. In Helium, go to `helium://flags/#custom-ntp`, enable **Custom New Tab Page URL**,
    and set its value to the file's path as a `file://` URL. The format differs by OS:
 
@@ -72,8 +72,9 @@ Helium itself is available for macOS, Windows, and Linux from
   you to re-grant access to the folder — this happens after a full quit of the browser
   (not just closing a window), and is normal Chromium permission behavior, not a bug.
   Clicking the ⚙ button again re-connects it.
-- **No folder access on your browser?** Drag and drop image files anywhere on the page
-  instead — they're stored in the browser's local database and used the same way.
+- **Touch device, or no folder access?** The ⚙ button opens an image chooser instead,
+  and drag and drop also works. Chosen images are copied into the browser's local
+  database and used the same way.
 - **Search**: type and hit Enter to search, or type a bare URL/domain to navigate
   directly. Click the small icon at the right edge of the search bar to pick a
   different search engine — the list includes Google, Bing, DuckDuckGo, Brave Search,
@@ -82,18 +83,18 @@ Helium itself is available for macOS, Windows, and Linux from
 
 ## Customizing
 
-Everything lives in one file, `index.html`. A few starting points if you want to
-change something:
+Markup and styles are in `index.html`, behavior in `app.js`. A few starting points if
+you want to change something:
 
-- **Search engines**: edit the `ENGINES` object near the top of the `<script>` block —
+- **Search engines**: edit the `ENGINES` object in `app.js` —
   add, remove, or reorder entries. Each needs a `name` and a `url` with the query
   parameter placed right before where the search term gets appended. Favicons are
   fetched automatically from each engine's own domain, nothing extra to configure.
-- **Colors / look**: the `:root` block at the top of the `<style>` section defines the
+- **Colors / look**: the `:root` block at the top of the `<style>` section in `index.html` defines the
   glass-panel color, border color, and text colors used throughout — change those
   instead of hunting through individual rules.
-- **How long a wallpaper avoids repeating**: `RECENT_WALLPAPER_CAP` near the wallpaper
-  code controls how many recently-shown images are excluded before one can repeat.
+- **How long a wallpaper avoids repeating**: `RECENT_WALLPAPER_CAP` in `app.js`
+  controls how many recently-shown images are excluded before one can repeat.
   Raise it for less repetition (needs a bigger photo folder to feel natural), lower it
   if you'd rather see more repeats.
 
