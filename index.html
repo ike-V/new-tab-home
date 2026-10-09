@@ -168,6 +168,7 @@
 </div>
 
 <div id="drop-hint">Drop images to add them as wallpapers</div>
+<input type="file" id="wallpaper-input" accept="image/*" multiple hidden>
 
 <script>
 (function(){
@@ -387,11 +388,21 @@
     return false;
   }
 
+  const wallpaperInput = document.getElementById('wallpaper-input');
+  const useImageChooser = ()=> !('showDirectoryPicker' in window) || matchMedia('(pointer: coarse)').matches;
+
+  async function addImages(fileList){
+    const files = Array.from(fileList).filter(f=> f.type.startsWith('image/'));
+    if(files.length === 0) return;
+    for(const f of files) await idbAdd('dropped', f);
+    await pickRandomFromDroppedPool();
+  }
+
   async function initWallpaper(){
     showCachedInstantly();
 
-    if(!('showDirectoryPicker' in window)){
-      fallbackNote.textContent = 'This browser does not support folder access. Drag & drop images anywhere to use them as wallpapers.';
+    if(useImageChooser()){
+      fallbackNote.textContent = 'Use the ⛭ button (top right) to choose images, or drag & drop them onto the page.';
       fallbackNote.style.display = 'block';
       await pickRandomFromDroppedPool();
       return;
@@ -417,6 +428,10 @@
     }
   }
   document.getElementById('wallpaper-btn').addEventListener('click', async ()=>{
+    if(useImageChooser()){
+      wallpaperInput.click();
+      return;
+    }
     try{
       if(needsReconnect && dirHandle){
         const perm = await dirHandle.requestPermission({mode:'read'});
@@ -454,10 +469,11 @@
     e.preventDefault();
     dragCounter = 0;
     dropHint.classList.remove('show');
-    const files = Array.from(e.dataTransfer.files).filter(f=> f.type.startsWith('image/'));
-    if(files.length === 0) return;
-    for(const f of files) await idbAdd('dropped', f);
-    await pickRandomFromDroppedPool();
+    await addImages(e.dataTransfer.files);
+  });
+  wallpaperInput.addEventListener('change', async ()=>{
+    await addImages(wallpaperInput.files);
+    wallpaperInput.value = '';
   });
 
   initWallpaper();
