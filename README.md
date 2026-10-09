@@ -130,7 +130,7 @@ of actually submitting a search — which sends that query to whichever engine y
 picked, the same as typing it directly into your browser's address bar would.
 
 The extension requests one permission, `search`, used only to run your searches through
-the browser's default search engine.
+the browser's default search engine. Full policy: [PRIVACY.md](PRIVACY.md).
 
 ## Known limitations
 
