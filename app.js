@@ -465,13 +465,15 @@
   const wpAdd = document.getElementById('wp-add');
   const wpRemove = document.getElementById('wp-remove');
   function closeWallpaperMenu(){ wallpaperMenu.classList.remove('open'); }
+  const usingFolder = ()=> !useImageChooser() && !!dirHandle && !needsReconnect;
   wallpaperBtn.addEventListener('click', ()=>{
-    if(!currentPoolKey){ chooseWallpaper(); return; }
     wpAdd.title = wpAdd.ariaLabel = useImageChooser() ? 'Add images' : 'Choose folder';
+    wpNext.hidden = !(usingFolder() || currentPoolKey);
+    wpRemove.hidden = !currentPoolKey;
     wallpaperMenu.classList.toggle('open');
     closeEngineMenu();
   });
-  wpNext.addEventListener('click', pickRandomFromDroppedPool);
+  wpNext.addEventListener('click', ()=> usingFolder() ? pickRandomFromDirHandle(dirHandle) : pickRandomFromDroppedPool());
   wpAdd.addEventListener('click', ()=>{ closeWallpaperMenu(); chooseWallpaper(); });
   wpRemove.addEventListener('click', ()=>{ closeWallpaperMenu(); removeCurrentWallpaper(); });
   document.addEventListener('click', e=>{

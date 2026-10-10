@@ -81,17 +81,18 @@ only.
 
 ## Using it
 
-- **Wallpaper**: click the ⚙ button (top right) to pick a folder of images. A note at
+- **Wallpaper**: click the ⚙ button (top right) for a small menu: the picture icon picks
+  a folder of images, the circular arrow shows another image, and the × removes the
+  current one (images you added individually only). A note at
   the bottom-left offers the same button on first run and when access needs
   reconnecting. A random image from that folder is shown on every new tab. When the browser asks for folder
   access, choose **Allow on every visit** so it persists across restarts; if it asks
-  again, click the ⚙ button to re-connect. On Helium, the extension install (Option A)
+  again, open the ⚙ menu and click the picture icon to re-connect. On Helium, the extension install (Option A)
   offers that choice; the `file://` install (Option B) only offers a one-time allow,
   so access resets after each full browser quit.
-- **Touch device, or no folder access?** The ⚙ button opens an image chooser instead,
+- **Touch device, or no folder access?** The picture icon opens an image chooser instead,
   and drag and drop also works. Chosen images are copied into the browser's local
-  database and used the same way. Once images are added, the ⚙ button opens a small
-  menu: add more images, show another one, or remove the one on screen.
+  database and used the same way; the picture icon in the ⚙ menu adds images.
 - **Search**: type and hit Enter to search, or type a bare URL/domain to navigate
   directly. Click the icon at the right edge of the search bar to pick an engine:
   **Browser default** (extension installs only; uses your browser's own search engine
