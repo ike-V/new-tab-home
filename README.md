@@ -9,6 +9,8 @@ a wallpaper that rotates randomly through a folder of your own images on every n
 
 ![Search engine dropdown open, showing Google, Bing, DuckDuckGo, Brave Search, Startpage, Wikipedia, Reddit, YouTube, and YouTube Music](screenshots/engine-picker.jpg)
 
+![Clock, date, and search bar over a generated violet and blue wallpaper](screenshots/clock-and-search.jpg)
+
 ## Requirements
 
 - Any Chromium-based browser (Chrome, Edge, Brave, Helium, etc.), or Titanium on
@@ -88,7 +90,8 @@ only.
   so access resets after each full browser quit.
 - **Touch device, or no folder access?** The ⚙ button opens an image chooser instead,
   and drag and drop also works. Chosen images are copied into the browser's local
-  database and used the same way.
+  database and used the same way. Once images are added, the ⚙ button opens a small
+  menu: add more images, show another one, or remove the one on screen.
 - **Search**: type and hit Enter to search, or type a bare URL/domain to navigate
   directly. Click the icon at the right edge of the search bar to pick an engine:
   **Browser default** (extension installs only; uses your browser's own search engine
