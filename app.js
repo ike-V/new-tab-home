@@ -37,6 +37,17 @@
       });
     }catch(e){ }
   }
+  async function idbDelete(key){
+    try{
+      const db = await idb();
+      return await new Promise((resolve,reject)=>{
+        const tx = db.transaction(STORE,'readwrite');
+        tx.objectStore(STORE).delete(key);
+        tx.oncomplete = ()=> resolve();
+        tx.onerror = ()=> reject(tx.error);
+      });
+    }catch(e){ }
+  }
   async function idbAdd(storeKeyPrefix, val){
     const key = storeKeyPrefix + ':' + Date.now() + ':' + Math.random().toString(36).slice(2);
     await idbSet(key, val);
@@ -228,6 +239,7 @@
   engineToggle.addEventListener('click', e => {
     e.stopPropagation();
     if(engineMenu.classList.contains('open')){ closeEngineMenu(); return; }
+    closeWallpaperMenu();
     engineMenu.classList.add('open');
     positionEngineMenu();
   });
@@ -282,6 +294,7 @@
   const fallbackNote = document.getElementById('bg-fallback-note');
   const noteText = document.getElementById('note-text');
   const noteAction = document.getElementById('note-action');
+  let currentPoolKey = null;
   function showNote(text, actionLabel){
     noteText.textContent = text;
     noteAction.hidden = !actionLabel;
@@ -338,11 +351,13 @@
     currentObjectUrl = URL.createObjectURL(file);
     setBackground(currentObjectUrl);
     cacheAsDataUrl(file);
+    currentPoolKey = null;
     fallbackNote.style.display = 'none';
     return true;
   }
 
   async function pickRandomFromDroppedPool(){
+    currentPoolKey = null;
     const keys = await idbAllKeysWithPrefix('dropped:');
     if(keys.length === 0) return false;
     const key = pickAvoidingRecent(keys, k => k);
@@ -351,8 +366,28 @@
     if(currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
     currentObjectUrl = URL.createObjectURL(blob);
     setBackground(currentObjectUrl);
+    currentPoolKey = key;
     fallbackNote.style.display = 'none';
     return true;
+  }
+
+  function showEmptyPoolNote(){
+    showNote(
+      matchMedia('(pointer: coarse)').matches
+        ? 'Pick images to use as your wallpaper.'
+        : 'Pick images to use as your wallpaper, or drop them onto the page.',
+      'Choose images');
+  }
+
+  async function removeCurrentWallpaper(){
+    if(!currentPoolKey) return;
+    await idbDelete(currentPoolKey);
+    if(await pickRandomFromDroppedPool()) return;
+    if(currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
+    currentObjectUrl = null;
+    bgEl.style.backgroundImage = '';
+    lsSet('lastWallpaperDataUrl', '');
+    showEmptyPoolNote();
   }
 
   async function verifyPermission(handle){
@@ -365,8 +400,13 @@
   const useImageChooser = ()=> !('showDirectoryPicker' in window) || matchMedia('(pointer: coarse)').matches;
 
   async function addImages(fileList){
-    const files = Array.from(fileList).filter(f=> f.type.startsWith('image/'));
-    if(files.length === 0) return;
+    const files = Array.from(fileList).filter(f=> f.type.startsWith('image/') || IMG_RE.test(f.name));
+    if(files.length === 0){
+      const msg = 'No image files in that drop. Drag image files from your computer, or use the ⚙ button.';
+      showNote(msg);
+      if(bgEl.style.backgroundImage) setTimeout(()=>{ if(noteText.textContent === msg) fallbackNote.style.display = 'none'; }, 5000);
+      return;
+    }
     for(const f of files) await idbAdd('dropped', f);
     await pickRandomFromDroppedPool();
   }
@@ -376,11 +416,7 @@
 
     if(useImageChooser()){
       const ok = await pickRandomFromDroppedPool();
-      if(!ok) showNote(
-        matchMedia('(pointer: coarse)').matches
-          ? 'Pick images to use as your wallpaper.'
-          : 'Pick images to use as your wallpaper, or drop them onto the page.',
-        'Choose images');
+      if(!ok) showEmptyPoolNote();
       return;
     }
 
@@ -423,7 +459,26 @@
       if(err.name !== 'AbortError') showNote('Could not access that folder: ' + err.message, 'Try again');
     }
   }
-  document.getElementById('wallpaper-btn').addEventListener('click', chooseWallpaper);
+  const wallpaperBtn = document.getElementById('wallpaper-btn');
+  const wallpaperMenu = document.getElementById('wallpaper-menu');
+  const wpNext = document.getElementById('wp-next');
+  const wpAdd = document.getElementById('wp-add');
+  const wpRemove = document.getElementById('wp-remove');
+  function closeWallpaperMenu(){ wallpaperMenu.classList.remove('open'); }
+  wallpaperBtn.addEventListener('click', ()=>{
+    if(!currentPoolKey){ chooseWallpaper(); return; }
+    wpAdd.title = wpAdd.ariaLabel = useImageChooser() ? 'Add images' : 'Choose folder';
+    wallpaperMenu.classList.toggle('open');
+    closeEngineMenu();
+  });
+  wpNext.addEventListener('click', pickRandomFromDroppedPool);
+  wpAdd.addEventListener('click', ()=>{ closeWallpaperMenu(); chooseWallpaper(); });
+  wpRemove.addEventListener('click', ()=>{ closeWallpaperMenu(); removeCurrentWallpaper(); });
+  document.addEventListener('click', e=>{
+    const path = e.composedPath();
+    if(!path.includes(wallpaperMenu) && !path.includes(wallpaperBtn)) closeWallpaperMenu();
+  });
+  document.addEventListener('keydown', e=>{ if(e.key === 'Escape') closeWallpaperMenu(); });
   noteAction.addEventListener('click', chooseWallpaper);
 
   /* ---------- drag & drop fallback ---------- */
