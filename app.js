@@ -329,13 +329,18 @@
 
   const RECENT_WALLPAPER_CAP = 20;
 
+  function markRecent(key){
+    const recent = JSON.parse(lsGet('recentWallpapers') || '[]');
+    lsSet('recentWallpapers', JSON.stringify(recent.concat(key).slice(-RECENT_WALLPAPER_CAP)));
+  }
+
   function pickAvoidingRecent(items, keyFn){
     const recent = JSON.parse(lsGet('recentWallpapers') || '[]');
     const cap = Math.min(RECENT_WALLPAPER_CAP, items.length - 1);
     const avoid = new Set(cap > 0 ? recent.slice(-cap) : []);
     const pool = items.filter(item => !avoid.has(keyFn(item)));
     const chosen = pool[Math.floor(Math.random() * pool.length)];
-    lsSet('recentWallpapers', JSON.stringify(recent.concat(keyFn(chosen)).slice(-RECENT_WALLPAPER_CAP)));
+    markRecent(keyFn(chosen));
     return chosen;
   }
 
@@ -359,11 +364,8 @@
     return true;
   }
 
-  async function pickRandomFromDroppedPool(){
+  async function showPoolImage(key){
     currentPoolKey = null;
-    const keys = await idbAllKeysWithPrefix('dropped:');
-    if(keys.length === 0) return false;
-    const key = pickAvoidingRecent(keys, k => k);
     const blob = await idbGet(key);
     if(!blob) return false;
     if(currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
@@ -372,6 +374,13 @@
     currentPoolKey = key;
     fallbackNote.style.display = 'none';
     return true;
+  }
+
+  async function pickRandomFromDroppedPool(){
+    currentPoolKey = null;
+    const keys = await idbAllKeysWithPrefix('dropped:');
+    if(keys.length === 0) return false;
+    return showPoolImage(pickAvoidingRecent(keys, k => k));
   }
 
   function showEmptyPoolNote(){
@@ -413,8 +422,10 @@
       if(bgEl.style.backgroundImage) setTimeout(()=>{ if(noteText.textContent === msg) fallbackNote.style.display = 'none'; }, 5000);
       return;
     }
-    for(const f of files) await idbAdd('dropped', f);
-    await pickRandomFromDroppedPool();
+    let newest;
+    for(const f of files) newest = await idbAdd('dropped', f);
+    markRecent(newest);
+    if(!(await showPoolImage(newest))) await pickRandomFromDroppedPool();
   }
 
   async function initWallpaper(){
