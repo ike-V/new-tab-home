@@ -1,5 +1,7 @@
 # New Tab ~/
 
+**A new tab that is truly yours.**
+
 A New Tab page for any Chromium-based browser: a clock, a multi-engine search bar, and
 a wallpaper that rotates randomly through a folder of your own images on every new tab.
 
