@@ -41,7 +41,7 @@ Your images are read in your browser and never uploaded. The extension has no se
 
 Works in Chromium-based browsers such as Chrome, Edge and Brave.
 
-Open source (MIT): https://github.com/ike-V/new-tab-home  
+Source: https://github.com/ike-V/new-tab-home  
 Install: [Chrome Web Store](https://chromewebstore.google.com/detail/new-tab/milkcimjhceibipjhmcobjahhhkmjehc), or see [Setup](#setup) below to load it manually.
 
 ## Screenshots
@@ -185,4 +185,4 @@ the browser's default search engine. Full policy: [PRIVACY.md](PRIVACY.md).
 
 ## License
 
-MIT — see `LICENSE`.
+All rights reserved. See `LICENSE`.
