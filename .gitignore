@@ -2,6 +2,8 @@
 
 # Store-listing and working screenshots (the two README images stay tracked)
 screenshots/screenshot*
+screenshots/newtabhome*
+screenshots/gscreenshot*
 screenshots/Screenshot_*
 screenshots/Image.jpg
 *.psd

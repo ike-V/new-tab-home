@@ -5,11 +5,9 @@ a wallpaper that rotates randomly through a folder of your own images on every n
 
 ## Screenshots
 
-![Full page view with clock, search bar, and a wallpaper](screenshots/full-page.jpg)
+![Clock, date, and search bar over a green wallpaper, with the wallpaper menu open: add images, show another, remove](screenshots/full-page.png)
 
-![Search engine dropdown open, showing Google, Bing, DuckDuckGo, Brave Search, Startpage, Wikipedia, Reddit, YouTube, and YouTube Music](screenshots/engine-picker.jpg)
-
-![Clock, date, and search bar over a generated violet and blue wallpaper](screenshots/clock-and-search.jpg)
+![Search engine dropdown open, showing Google, Bing, DuckDuckGo, Brave Search, Startpage, Wikipedia, Reddit, YouTube, and YouTube Music](screenshots/engine-picker.png)
 
 ## Requirements
 
