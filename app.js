@@ -301,7 +301,7 @@
     noteAction.textContent = actionLabel || '';
     fallbackNote.style.display = 'block';
   }
-  const IMG_RE = /\.(jpe?g|png|webp|gif|avif|bmp)$/i;
+  const IMG_RE = /\.(jpe?g|png|webp|gif|avif|bmp|svg)$/i;
   let currentObjectUrl = null;
   let dirHandle = null;
   let needsReconnect = false;
@@ -339,19 +339,22 @@
     return chosen;
   }
 
+  // Folder images plus any images added by drop or chooser.
   async function pickRandomFromDirHandle(handle){
-    const files = [];
+    const items = [];
     for await (const entry of handle.values()){
-      if(entry.kind === 'file' && IMG_RE.test(entry.name)) files.push(entry);
+      if(entry.kind === 'file' && IMG_RE.test(entry.name)) items.push({key: entry.name, entry});
     }
-    if(files.length === 0) return false;
-    const chosen = pickAvoidingRecent(files, f => f.name);
-    const file = await chosen.getFile();
+    for(const key of await idbAllKeysWithPrefix('dropped:')) items.push({key});
+    if(items.length === 0) return false;
+    const chosen = pickAvoidingRecent(items, item => item.key);
+    const blob = chosen.entry ? await chosen.entry.getFile() : await idbGet(chosen.key);
+    if(!blob) return false;
     if(currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
-    currentObjectUrl = URL.createObjectURL(file);
+    currentObjectUrl = URL.createObjectURL(blob);
     setBackground(currentObjectUrl);
-    cacheAsDataUrl(file);
-    currentPoolKey = null;
+    cacheAsDataUrl(blob);
+    currentPoolKey = chosen.entry ? null : chosen.key;
     fallbackNote.style.display = 'none';
     return true;
   }
@@ -379,15 +382,18 @@
       'Choose images');
   }
 
+  const showAnother = ()=> usingFolder() ? pickRandomFromDirHandle(dirHandle) : pickRandomFromDroppedPool();
+
   async function removeCurrentWallpaper(){
     if(!currentPoolKey) return;
     await idbDelete(currentPoolKey);
-    if(await pickRandomFromDroppedPool()) return;
+    lsSet('lastWallpaperDataUrl', '');
+    if(await showAnother()) return;
     if(currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
     currentObjectUrl = null;
     bgEl.style.backgroundImage = '';
-    lsSet('lastWallpaperDataUrl', '');
-    showEmptyPoolNote();
+    if(usingFolder()) showNote('No images found in your wallpaper folder.', 'Choose a different folder');
+    else showEmptyPoolNote();
   }
 
   async function verifyPermission(handle){
@@ -414,6 +420,10 @@
   async function initWallpaper(){
     showCachedInstantly();
 
+    // One-time: images dropped while a folder was chosen used to be stranded in storage.
+    const alreadyPurged = await idbGet('poolPurged');
+    await idbSet('poolPurged', true);
+
     if(useImageChooser()){
       const ok = await pickRandomFromDroppedPool();
       if(!ok) showEmptyPoolNote();
@@ -423,6 +433,9 @@
     const saved = await idbGet('dirHandle');
     if(saved){
       dirHandle = saved;
+      if(!alreadyPurged){
+        for(const key of await idbAllKeysWithPrefix('dropped:')) await idbDelete(key);
+      }
       if(await verifyPermission(saved)){
         const ok = await pickRandomFromDirHandle(dirHandle);
         if(!ok) showNote('No images found in your wallpaper folder.', 'Choose a different folder');
@@ -466,14 +479,17 @@
   const wpRemove = document.getElementById('wp-remove');
   function closeWallpaperMenu(){ wallpaperMenu.classList.remove('open'); }
   const usingFolder = ()=> !useImageChooser() && !!dirHandle && !needsReconnect;
-  wallpaperBtn.addEventListener('click', ()=>{
+  function refreshWallpaperMenu(){
     wpAdd.title = wpAdd.ariaLabel = useImageChooser() ? 'Add images' : 'Choose folder';
     wpNext.hidden = !(usingFolder() || currentPoolKey);
     wpRemove.hidden = !currentPoolKey;
+  }
+  wallpaperBtn.addEventListener('click', ()=>{
+    refreshWallpaperMenu();
     wallpaperMenu.classList.toggle('open');
     closeEngineMenu();
   });
-  wpNext.addEventListener('click', ()=> usingFolder() ? pickRandomFromDirHandle(dirHandle) : pickRandomFromDroppedPool());
+  wpNext.addEventListener('click', async ()=>{ await showAnother(); refreshWallpaperMenu(); });
   wpAdd.addEventListener('click', ()=>{ closeWallpaperMenu(); chooseWallpaper(); });
   wpRemove.addEventListener('click', ()=>{ closeWallpaperMenu(); removeCurrentWallpaper(); });
   document.addEventListener('click', e=>{
