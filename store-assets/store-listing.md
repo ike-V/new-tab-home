@@ -2,7 +2,7 @@
 
 ## Store listing tab
 
-**Name:** New Tab ~/ (from manifest)
+**Name:** New Tab Home ~/ (from manifest)
 
 **Summary** (manifest description, 109/132):
 A custom New Tab page: clock, multi-engine search, and a wallpaper that rotates through a local image folder.
@@ -14,19 +14,45 @@ A custom New Tab page: clock, multi-engine search, and a wallpaper that rotates 
 **Description:**
 
 ```
-Got a folder full of wallpapers you never see? New Tab ~/ puts them on your new tab page: pick a folder once, and every new tab shows a different image, with a clock and a search bar on top.
+A new tab that is truly yours.
 
-Your images never leave your computer. There are no accounts, no tracking, and no ads.
+Got a folder full of wallpapers you never see?
+Now you will, every time you open a tab.
+"New Tab Home ~/" (~/ short for home folder) replaces your new tab page with a clock, a search bar, and a wallpaper picked at random from a folder of your own images.
 
-FEATURES
-• Wallpapers from your own folder, with recently shown images skipped so you don't see the same few over and over
-• "Allow on every visit" keeps the folder available across restarts
-• Search with your browser's default engine, or pick from the various built-in engine options
-• Add your own search engines with a URL template
-• Press / anywhere on the page to focus the search bar
+Your images never leave your computer.
+
+ -No accounts, no tracking, no ads-
+
+WALLPAPERS
+• Choose a folder once. Every new tab / refresh shows a different image
+
+• Recently shown images are skipped, so you don't see the same few over and over
+
+• Choose "Allow on every visit" and the folder stays available after you restart your browser
+
+• The gear button opens a small menu: add images, refresh, or remove the current wallpaper image
+
+• Drag image files onto the page to add them to the rotation
+
+• Remove only deletes the copy the extension holds, never your original files. Images from your folder can't be removed this way; delete the file from the folder instead
+
+• No folder access? Some browsers turn it off, and touch devices work differently. Add images directly instead
+
+• Works with JPG, PNG, WebP, GIF, AVIF, BMP and SVG
+
+
+SEARCH
+• Uses your browser's default search engine
+• Or pick another: Google, Bing, DuckDuckGo, Brave Search, or Startpage, (also Wikipedia, Reddit, YouTube, YouTube Music, or Wallhaven)
+• Add your own search engines with a URL template (put %s where the search goes)
+• Type a web address and press Enter to go straight there
+• Press / anywhere on the page to jump to the search bar
 
 PRIVACY
-The extension has no server, no analytics, and no remote code. Searches go straight to the engine you choose. The only network requests it makes are favicon lookups for the built-in engines in the picker. Full policy: https://github.com/ike-V/new-tab-home/blob/main/PRIVACY.md
+Your images are read in your browser and never uploaded. The extension has no server, no analytics, and no remote code. Searches go straight to the engine you choose. The only network requests it makes are small favicon lookups for the built-in engines in the picker. It asks for one permission, "search", so it can use your browser's default search engine. Full policy: https://github.com/ike-V/new-tab-home/blob/main/PRIVACY.md
+
+Works in Chromium-based browsers such as Chrome, Edge and Brave.
 
 Open source (MIT): https://github.com/ike-V/new-tab-home
 ```
