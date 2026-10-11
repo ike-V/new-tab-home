@@ -1,9 +1,48 @@
 # New Tab ~/
 
-**A new tab that is truly yours.**
+A new tab that is truly yours.
 
-A New Tab page for any Chromium-based browser: a clock, a multi-engine search bar, and
-a wallpaper that rotates randomly through a folder of your own images on every new tab.
+Got a folder full of wallpapers you never see?  
+Now you will, every time you open a tab.  
+"New Tab Home ~/" (`~/` short for home folder) replaces your new tab page with a clock, a search bar, and a wallpaper picked at random from a folder of your own images.
+
+
+Your images never leave your computer.
+
+ -No accounts, no tracking, no ads-
+
+WALLPAPERS  
+• Choose a folder once. Every new tab / refresh shows a different image
+
+• Recently shown images are skipped, so you don't see the same few over and over
+
+• Choose "Allow on every visit" and the folder stays available after you restart your browser
+
+• The gear button opens a small menu: add images, refresh, or remove the current wallpaper image
+
+• Drag image files onto the page to add them to the rotation
+
+• Remove only deletes the copy the extension holds, never your original files. Images from your folder can't be removed this way; delete the file from the folder instead
+
+• No folder access? Some browsers turn it off, and touch devices work differently. Add images directly instead
+
+• Works with JPG, PNG, WebP, GIF, AVIF, BMP and SVG
+
+
+SEARCH  
+• Uses your browser's default search engine (extension installs only; the `file://` install uses Google)  
+• Or pick another: Google, Bing, DuckDuckGo, Brave Search, or Startpage, (also Wikipedia, Reddit, YouTube, YouTube Music, or Wallhaven)  
+• Add your own search engines with a URL template (put %s where the search goes)  
+• Type a web address and press Enter to go straight there  
+• Press / anywhere on the page to jump to the search bar
+
+PRIVACY  
+Your images are read in your browser and never uploaded. The extension has no server, no analytics, and no remote code. Searches go straight to the engine you choose. The only network requests it makes are small favicon lookups for the built-in engines in the picker. It asks for one permission, "search", so it can use your browser's default search engine. Full policy: https://github.com/ike-V/new-tab-home/blob/main/PRIVACY.md
+
+Works in Chromium-based browsers such as Chrome, Edge and Brave.
+
+Open source (MIT): https://github.com/ike-V/new-tab-home  
+Install: see [Setup](#setup) below.
 
 ## Screenshots
 
