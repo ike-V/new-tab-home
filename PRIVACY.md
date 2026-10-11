@@ -1,8 +1,8 @@
-# Privacy Policy: New Tab ~/
+# Privacy Policy: New Tab Home ~/
 
-Last updated: 2026-10-09
+Last updated: 2026-10-11
 
-New Tab ~/ replaces your browser's New Tab page with a clock, a search box, and a
+New Tab Home ~/ replaces your browser's New Tab page with a clock, a search box, and a
 wallpaper from your own images. It has no accounts, servers, analytics, or advertising.
 The developer collects no data.
 
