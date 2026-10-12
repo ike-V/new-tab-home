@@ -96,6 +96,6 @@ https://github.com/ike-V/new-tab-home/blob/main/PRIVACY.md
 - Pay the one-time $5 developer fee and enable 2-step verification on the account.
 - Upload `store-assets/new-tab-home.zip`.
 - Rebuild the ZIP after any change to `manifest.json`, `index.html`, `app.js`, or `icons/`:
-  `zip -r store-assets/new-tab-home.zip manifest.json index.html app.js icons -x "*.DS_Store"`
+  `python3 store-assets/build_zip.py` (leaves the manifest's `key` out of the package).
 - Bump `version` in `manifest.json` for each update.
-- Optionally pin the extension ID by adding a `key` to the manifest (from the store dashboard's package tab).
+- `manifest.json` keeps the store's public `key`, so unpacked copies get the store ID (`milkcimjhceibipjhmcobjahhhkmjehc`). An unpacked copy and the store copy can't be installed in one browser together.
