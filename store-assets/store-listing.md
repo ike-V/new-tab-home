@@ -17,8 +17,8 @@ A custom New Tab page: clock, multi-engine search, and a wallpaper that rotates 
 A new tab that is truly yours.
 
 Got a folder full of wallpapers you never see?
-Now you will, every time you open a tab.
-"New Tab Home ~/" (~/ short for home folder) replaces your new tab page with a clock, a search bar, and a wallpaper picked at random from a folder of your own images.
+Now you will, every time you open a new tab.
+"New Tab Home ~/" (~/ short for Home folder) replaces your new tab page with a clock, a search bar, and a wallpaper picked at random from a folder of your own images.
 
 Your images never leave your computer.
 
@@ -39,12 +39,12 @@ WALLPAPERS
 
 • No folder access? Some browsers turn it off, and touch devices work differently. Add images directly instead
 
-• Works with JPG, PNG, WebP, GIF, AVIF, BMP and SVG
+• Works with common image file types
 
 
 SEARCH
 • Uses your browser's default search engine
-• Or pick another: Google, Bing, DuckDuckGo, Brave Search, or Startpage, (also Wikipedia, Reddit, YouTube, YouTube Music, or Wallhaven)
+• Or pick another built-in engine
 • Add your own search engines with a URL template (put %s where the search goes)
 • Type a web address and press Enter to go straight there
 • Press / anywhere on the page to jump to the search bar
