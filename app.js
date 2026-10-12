@@ -414,6 +414,17 @@
   const wallpaperInput = document.getElementById('wallpaper-input');
   const useImageChooser = ()=> !('showDirectoryPicker' in window) || matchMedia('(pointer: coarse)').matches;
 
+  const fileSignature = f => `${f.name}|${f.size}|${f.lastModified}`;
+
+  async function poolSignatures(){
+    const known = new Map();
+    for(const key of await idbAllKeysWithPrefix('dropped:')){
+      const f = await idbGet(key);
+      if(f) known.set(fileSignature(f), key);
+    }
+    return known;
+  }
+
   async function addImages(fileList){
     const files = Array.from(fileList).filter(f=> f.type.startsWith('image/') || IMG_RE.test(f.name));
     if(files.length === 0){
@@ -422,10 +433,23 @@
       if(bgEl.style.backgroundImage) setTimeout(()=>{ if(noteText.textContent === msg) fallbackNote.style.display = 'none'; }, 5000);
       return;
     }
-    let newest;
-    for(const f of files) newest = await idbAdd('dropped', f);
+    const known = await poolSignatures();
+    let added, existing, skipped = 0;
+    for(const f of files){
+      const sig = fileSignature(f);
+      if(known.has(sig)){ existing = known.get(sig); skipped++; continue; }
+      added = await idbAdd('dropped', f);
+      known.set(sig, added);
+    }
+    if(added && navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(()=>{});
+    const newest = added || existing;
     markRecent(newest);
     if(!(await showPoolImage(newest))) await pickRandomFromDroppedPool();
+    if(skipped){
+      const msg = skipped === 1 ? 'Already added, skipped 1 duplicate.' : `Already added, skipped ${skipped} duplicates.`;
+      showNote(msg);
+      setTimeout(()=>{ if(noteText.textContent === msg) fallbackNote.style.display = 'none'; }, 4000);
+    }
   }
 
   async function initWallpaper(){
