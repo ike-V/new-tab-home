@@ -54,7 +54,7 @@ Your images are read in your browser and never uploaded. The extension has no se
 
 Works in Chromium-based browsers such as Chrome, Edge and Brave.
 
-Open source (MIT): https://github.com/ike-V/new-tab-home
+Source code: https://github.com/ike-V/new-tab-home
 ```
 
 **Graphics:**
