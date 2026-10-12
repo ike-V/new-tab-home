@@ -431,7 +431,6 @@
   async function initWallpaper(){
     showCachedInstantly();
 
-    // One-time: images dropped while a folder was chosen used to be stranded in storage.
     const alreadyPurged = await idbGet('poolPurged');
     await idbSet('poolPurged', true);
 
