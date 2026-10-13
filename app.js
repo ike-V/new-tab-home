@@ -123,7 +123,7 @@ const ICON_ART16 = {
     '<stop offset="0" stop-color="#fff" stop-opacity=".38"/><stop offset=".5" stop-color="#fff" stop-opacity=".06"/>' +
     '<stop offset=".52" stop-color="#000" stop-opacity=".02"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient>' +
     '<g id="o"><rect width="1" height="1" rx=".18" fill="url(#s)"/>' +
-    '<path d="M.08 .92V.22Q.08 .08 .22 .08H.92" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width=".1" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<path d="M.08 .84V.22Q.08 .08 .22 .08H.84" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width=".1" stroke-linecap="round" stroke-linejoin="round"/>' +
     '<path d="M.92 .14V.78Q.92 .92 .78 .92H.1" fill="none" stroke="#000" stroke-opacity=".25" stroke-width=".1" stroke-linecap="round" stroke-linejoin="round"/></g></defs>';
   function glassSvg(cells, backdrop = ''){
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8">' + GLASS_DEFS + backdrop +
