@@ -1,0 +1,24 @@
+{
+  "palette": {
+    "9": 137
+  },
+  "icons": {
+    "close": 0,
+    "bing": 2,
+    "brave": 3,
+    "wikipedia": 4,
+    "youtubemusic": 5,
+    "google": 6,
+    "duckduckgo": 7,
+    "startpage": 8,
+    "reddit": 9,
+    "youtube": 10,
+    "wallhaven": 11
+  },
+  "icons16": {
+    "remove": 16,
+    "refresh": 18,
+    "add": 20,
+    "gear": 22
+  }
+}

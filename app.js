@@ -88,6 +88,103 @@
     youtubemusic: {name:'YouTube Music', url:'https://music.youtube.com/search?q=%s'},
     wallhaven:    {name:'Wallhaven',     url:'https://wallhaven.cc/search?q=%s'},
   };
+  /* BEGIN GENERATED ICONS */
+const ICON_PALETTE = ["#000000", "#1D2B53", "#7E2553", "#008751", "#AB5236", "#5F574F", "#C2C3C7", "#FFF1E8", "#FF004D", "#FF6C24", "#FFEC27", "#00E436", "#29ADFF", "#83769C", "#FF77A8", "#FFCCAA"];
+const ICON_ART = {
+  close: ["00000000", "00000000", "00700700", "00077000", "00077000", "00700700", "00000000", "00000000"],
+  bing: ["00000000", "0cc00000", "0cc00000", "0ccccc00", "0cc00cc0", "0cc00cc0", "0ccccc00", "00000000"],
+  brave: ["00000000", "99999999", "97999979", "99777799", "99977999", "09999990", "00999900", "00099000"],
+  wikipedia: ["07777770", "77777777", "70777707", "70777707", "70700707", "77077077", "77777777", "07777770"],
+  youtubemusic: ["08888880", "88878888", "88877888", "88877788", "88877788", "88877888", "88878888", "08888880"],
+  google: ["00888880", "08800088", "aa000000", "aa000000", "aa00cccc", "330000cc", "03300033", "00333330"],
+  duckduckgo: ["00999900", "09999990", "99977999", "99707799", "99777aa9", "99977999", "09999990", "00999900"],
+  startpage: ["07777770", "77111777", "71777177", "71777177", "71777177", "77111777", "77777717", "07777770"],
+  reddit: ["00999900", "09799990", "99979999", "97777779", "97977979", "97777779", "09777790", "00999900"],
+  youtube: ["00888800", "08878880", "88877888", "88877788", "88877788", "88877888", "08878880", "00888800"],
+  wallhaven: ["07777770", "77777717", "77777777", "77777d77", "1777ddd7", "117ddddd", "111ddddd", "0111ddd0"],
+};
+const ICON_ART16 = {
+  remove: ["7700000000000077", "7770000000000777", "0777000000007770", "0077700000077700", "0007770000777000", "0000777007770000", "0000077777700000", "0000007777000000", "0000007777000000", "0000077777700000", "0000777007770000", "0007770000777000", "0077700000077700", "0777000000007770", "7770000000000777", "7700000000000077"],
+  refresh: ["0000077777700000", "0007777777777000", "0077700000077700", "0777000000007700", "0770000000007700", "7700000007077700", "7700000007777000", "7700000007770000", "7700000007777000", "7700000000000000", "7700000000000000", "0770000000000000", "0777000000007700", "0077700000077700", "0007777777777000", "0000077777700000"],
+  add: ["0777777777777770", "7777777777777777", "7777777777777777", "7777777777700077", "7777777777700077", "7777777777700077", "7777777777777777", "7777777777777777", "7700777777777777", "7000077000777777", "0077000070077777", "0777700777007777", "7777770077700777", "7777777007770077", "7777777777777007", "0777777777777700"],
+  gear: ["0000000000000000", "0077000770007700", "0777707777077770", "0777777777777770", "0077777777777700", "0007777007777000", "0077770000777700", "0777700000077770", "0777700000077770", "0077770000777700", "0007777007777000", "0077777777777700", "0777777777777770", "0777707777077770", "0077000770007700", "0000000000000000"],
+};
+/* END GENERATED ICONS */
+
+  const svgUri = svg => 'data:image/svg+xml,' + encodeURIComponent(svg);
+  function pixelSvg(cells, backdrop = '', size = 8){
+    const byColour = {};
+    for(const [x, y, colour] of cells) (byColour[colour] = byColour[colour] || []).push(`M${x} ${y}h1v1h-1z`);
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges">` + backdrop +
+      Object.entries(byColour).map(([colour, d]) => `<path fill="${colour}" d="${d.join('')}"/>`).join('') + '</svg>';
+  }
+  // Glass pixels: each art pixel is a rounded tile with a bevel and a light-to-dark shade.
+  const GLASS_DEFS = '<defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0" stop-color="#fff" stop-opacity=".38"/><stop offset=".5" stop-color="#fff" stop-opacity=".06"/>' +
+    '<stop offset=".52" stop-color="#000" stop-opacity=".02"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient>' +
+    '<g id="o"><rect width="1" height="1" rx=".18" fill="url(#s)"/>' +
+    '<path d="M.08 .92V.22Q.08 .08 .22 .08H.92" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width=".1" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<path d="M.92 .14V.78Q.92 .92 .78 .92H.1" fill="none" stroke="#000" stroke-opacity=".25" stroke-width=".1" stroke-linecap="round" stroke-linejoin="round"/></g></defs>';
+  function glassSvg(cells, backdrop = ''){
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8">' + GLASS_DEFS + backdrop +
+      cells.map(([x, y, c]) => `<rect x="${x}" y="${y}" width="1" height="1" rx=".18" fill="${c}"/><use href="#o" x="${x}" y="${y}"/>`).join('') + '</svg>';
+  }
+  const iconMemo = {};
+  function iconUri(name, glass = true){
+    const key = glass ? name : name + '@flat';
+    if(iconMemo[key]) return iconMemo[key];
+    const cells = [];
+    ICON_ART[name].forEach((row, y) => [...row].forEach((ch, x) => {
+      const i = parseInt(ch, 16);
+      if(i) cells.push([x, y, ICON_PALETTE[i]]);
+    }));
+    return (iconMemo[key] = svgUri(glass ? glassSvg(cells) : pixelSvg(cells)));
+  }
+  function iconUri16(name){
+    const key = name + '@16';
+    if(iconMemo[key]) return iconMemo[key];
+    const cells = [];
+    ICON_ART16[name].forEach((row, y) => [...row].forEach((ch, x) => {
+      const i = parseInt(ch, 16);
+      if(i) cells.push([x, y, ICON_PALETTE[i]]);
+    }));
+    return (iconMemo[key] = svgUri(pixelSvg(cells, '', 16)));
+  }
+  document.querySelectorAll('img[data-icon]').forEach(img => {
+    const name = img.dataset.icon;
+    img.src = name in ICON_ART16 ? iconUri16(name) : iconUri(name);
+  });
+
+  const IDENT_COLOURS = [12, 14, 9, 11, 13, 10, 8, 6].map(i => ICON_PALETTE[i]);
+  function seededRandom(seed){
+    let s = seed >>> 0;
+    return () => {
+      s = (s + 0x6D2B79F5) | 0;
+      let t = Math.imul(s ^ (s >>> 15), 1 | s);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  const nameSeed = name => [...name].reduce((h, c) => (h * 31 + c.codePointAt(0)) >>> 0, 7);
+  const newSeed = () => Math.floor(Math.random() * 1e9) + 1;
+  function identiconUri(seed){
+    const rand = seededRandom(seed);
+    let cells, on;
+    do{
+      cells = [];
+      for(let i = 0; i < 18; i++) cells.push(rand() < 0.45);
+      on = cells.filter(Boolean).length;
+    }while(on < 6 || on > 10);
+    const colour = IDENT_COLOURS[Math.floor(rand() * IDENT_COLOURS.length)];
+    const px = [];
+    cells.forEach((filled, i) => {
+      if(!filled) return;
+      const x = i % 3, y = Math.floor(i / 3);
+      px.push([1 + x, 1 + y, colour], [6 - x, 1 + y, colour]);
+    });
+    return svgUri(glassSvg(px, '<path fill="#2A2A28" d="M1 0h6v1h1v6h-1v1H1v-1H0V1h1z"/>'));
+  }
+
   const SEARCH_ICON = 'data:image/svg+xml,' + encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="10.5" r="6.5"/><path d="M16 15.5l4.5 4.5"/></svg>');
 
@@ -113,10 +210,10 @@
     const list = [];
     if(hasBrowserSearch()) list.push({key:'default', name:'Browser default', icon:SEARCH_ICON});
     for(const [key, e] of Object.entries(ENGINES)){
-      list.push({key, name:e.name, url:e.url, icon:faviconFor(e.url.replace('%s', 'x'))});
+      list.push({key, name:e.name, url:e.url, icon:iconUri(key)});
     }
     for(const e of loadCustomEngines()){
-      list.push({key:'custom:' + e.id, id:e.id, name:e.name, url:e.url, custom:true, icon:null});
+      list.push({key:'custom:' + e.id, id:e.id, name:e.name, url:e.url, custom:true, icon:identiconUri(Number.isInteger(e.seed) ? e.seed : nameSeed(e.name))});
     }
     return list;
   }
@@ -135,21 +232,14 @@
   const engineMenu = document.getElementById('engine-menu');
 
   const makeIcon = src => { const img = document.createElement('img'); img.src = src; img.alt = ''; return img; };
-  const avatarHue = name => [...name].reduce((h, c) => (h * 31 + c.codePointAt(0)) >>> 0, 7) % 360;
-  const makeAvatar = name => {
-    const el = document.createElement('span');
-    el.className = 'engine-avatar';
-    el.textContent = [...name][0].toUpperCase();
-    el.style.background = 'hsl(' + avatarHue(name) + ',55%,42%)';
-    return el;
-  };
-  const engineIcon = e => e.icon ? makeIcon(e.icon) : makeAvatar(e.name);
+  const engineIcon = e => makeIcon(e.icon);
 
   const addBtn = document.createElement('button');
   addBtn.type = 'button'; addBtn.className = 'engine-add'; addBtn.textContent = '+ Add search engine';
   const addForm = document.createElement('div');
   addForm.className = 'engine-form'; addForm.hidden = true;
   addForm.innerHTML =
+    '<div class="ef-iconrow"><img class="ef-preview" alt=""><button type="button" class="ef-shuffle">Shuffle icon</button></div>' +
     '<input class="ef-name" type="text" placeholder="Name" maxlength="30" autocomplete="off">' +
     '<input class="ef-url" type="text" placeholder="https://example.com/search?q=%s" autocomplete="off">' +
     '<div class="ef-error" role="alert"></div>' +
@@ -157,6 +247,10 @@
   const nameInput = addForm.querySelector('.ef-name');
   const urlInput = addForm.querySelector('.ef-url');
   const formError = addForm.querySelector('.ef-error');
+  const preview = addForm.querySelector('.ef-preview');
+  let pendingSeed = newSeed();
+  const showPreview = ()=>{ preview.src = identiconUri(pendingSeed); };
+  addForm.querySelector('.ef-shuffle').addEventListener('click', ()=>{ pendingSeed = newSeed(); showPreview(); });
 
   function updateEngineToggleIcon(){
     const e = activeEngine();
@@ -176,7 +270,7 @@
       row.append(pick);
       if(e.custom){
         const rm = document.createElement('button');
-        rm.type = 'button'; rm.className = 'engine-remove'; rm.textContent = '×';
+        rm.type = 'button'; rm.className = 'engine-remove'; rm.append(makeIcon(iconUri('close', false)));
         rm.title = 'Remove ' + e.name;
         rm.addEventListener('click', ()=> removeCustomEngine(e));
         row.append(rm);
@@ -221,12 +315,13 @@
       return;
     }
     const id = Date.now().toString(36);
-    saveCustomEngines(loadCustomEngines().concat({id, name, url}));
+    saveCustomEngines(loadCustomEngines().concat({id, name, url, seed:pendingSeed}));
     selectEngine('custom:' + id);
     closeEngineMenu();
   }
 
   addBtn.addEventListener('click', ()=>{
+    pendingSeed = newSeed(); showPreview();
     addBtn.hidden = true; addForm.hidden = false;
     positionEngineMenu();
     nameInput.focus();
@@ -279,15 +374,6 @@
 
   renderEngineMenu();
   updateEngineToggleIcon();
-
-  /* ---------- favicon helper ---------- */
-
-  function faviconFor(url){
-    try{
-      const u = new URL(url);
-      return `https://www.google.com/s2/favicons?domain=${u.hostname}&sz=64`;
-    }catch{ return ''; }
-  }
 
   /* ---------- wallpaper ---------- */
   const bgEl = document.getElementById('bg');
