@@ -37,7 +37,7 @@ SEARCH
 • Press / anywhere on the page to jump to the search bar
 
 PRIVACY  
-Your images are read in your browser and never uploaded. The extension has no server, no analytics, and no remote code. Searches go straight to the engine you choose. The only network requests it makes are small favicon lookups for the built-in engines in the picker. It asks for one permission, "search", so it can use your browser's default search engine. Full policy: https://github.com/ike-V/new-tab-home/blob/main/PRIVACY.md
+Your images are read in your browser and never uploaded. The extension has no server, no analytics, and no remote code. Searches go straight to the engine you choose. It makes no network requests of its own. It asks for one permission, "search", so it can use your browser's default search engine. Full policy: https://github.com/ike-V/new-tab-home/blob/main/PRIVACY.md
 
 Works in Chromium-based browsers such as Chrome, Edge and Brave.
 
@@ -149,8 +149,9 @@ you want to change something:
 
 - **Search engines**: edit the `ENGINES` object in `app.js` —
   add, remove, or reorder entries. Each needs a `name` and a `url` with `%s` where the
-  search term goes. Favicons for these built-in entries are fetched automatically from
-  each engine's domain, nothing extra to configure.
+  search term goes. Their icons are pixel art drawn in PICO-8: edit `art/engine-icons.p8`
+  (sprite numbers are listed in `art/engine-icons.map.json`), then run
+  `python3 art/p8_to_icons.py art/engine-icons.p8 art/engine-icons.map.json app.js`.
 - **Colors / look**: the `:root` block at the top of the `<style>` section in `index.html` defines the
   glass-panel color, border color, and text colors used throughout — change those
   instead of hunting through individual rules.
@@ -161,16 +162,13 @@ you want to change something:
 
 ## Privacy
 
-No data leaves your browser except favicon lookups. The search-engine picker fetches
-the built-in engines' icons from a public Google endpoint, which means those engines'
-domain names (e.g. "google.com", "wikipedia.org") are sent to Google every time the
-page loads — that's the one exception. Engines you add yourself get a generated letter
-icon and make no requests, so a private search address never leaves your browser.
-Everything else stays entirely on your machine: your
-wallpaper images, which folder you connected, your chosen search engine, and anything
-you type into the search box are never transmitted anywhere, with the obvious exception
-of actually submitting a search — which sends that query to whichever engine you
-picked, the same as typing it directly into your browser's address bar would.
+No data leaves your browser. The extension makes no network requests of its own: the
+search-engine icons are pixel art built into it (engines you add get a generated icon),
+so nothing is fetched from anywhere. Your wallpaper images, which folder you connected,
+your chosen search engine, and anything you type into the search box are never
+transmitted, with the obvious exception of actually submitting a search, which sends
+that query to whichever engine you picked, the same as typing it directly into your
+browser's address bar would.
 
 The extension requests one permission, `search`, used only to run your searches through
 the browser's default search engine. Full policy: [PRIVACY.md](PRIVACY.md).

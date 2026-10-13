@@ -50,7 +50,7 @@ SEARCH
 • Press / anywhere on the page to jump to the search bar
 
 PRIVACY
-Your images are read in your browser and never uploaded. The extension has no server, no analytics, and no remote code. Searches go straight to the engine you choose. The only network requests it makes are small favicon lookups for the built-in engines in the picker. It asks for one permission, "search", so it can use your browser's default search engine. Full policy: https://github.com/ike-V/new-tab-home/blob/main/PRIVACY.md
+Your images are read in your browser and never uploaded. The extension has no server, no analytics, and no remote code. Searches go straight to the engine you choose. It makes no network requests of its own. It asks for one permission, "search", so it can use your browser's default search engine. Full policy: https://github.com/ike-V/new-tab-home/blob/main/PRIVACY.md
 
 Works in Chromium-based browsers such as Chrome, Edge and Brave.
 

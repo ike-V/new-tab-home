@@ -1,6 +1,6 @@
 # Privacy Policy: New Tab Home ~/
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 New Tab Home ~/ replaces your browser's New Tab page with a clock, a search box, and a
 wallpaper from your own images. It has no accounts, servers, analytics, or advertising.
@@ -14,20 +14,17 @@ Kept in your browser, for this extension only. Never transmitted.
   copies of images you chose or dropped. The last wallpaper shown is cached if under
   4 MB, for faster loading.
 - **Settings:** your selected search engine, any custom search engines you add (name
-  and URL), and the file names of the last 20 wallpapers shown (so they don't repeat).
+  and URL, plus a number that picks its generated icon), and the file names of the last 20 wallpapers shown (so they don't repeat).
 
 To remove it: delete the extension or clear its site data. Revoke folder access in your
 browser's site settings. Remove a custom engine with its × in the engine menu.
 
 ## Network requests
 
-The extension makes one kind of request. The engine menu loads icons for the built-in
-search engines (Google, Bing, DuckDuckGo, Brave Search, Startpage, Wikipedia, Reddit,
-YouTube, YouTube Music, Wallhaven) from Google's favicon service
-(`www.google.com/s2/favicons`). Each request contains that engine's domain name and,
-as with any web request, your IP address and browser details, which Google receives
-under its own privacy policy. It contains nothing about you or your searches. Custom
-engines use a generated letter icon and make no request.
+The extension makes no network requests of its own. The search-engine icons are pixel
+art built into the extension, and custom engines get a generated icon, so no icon is
+fetched from anywhere. The only traffic is what you start: submitting a search sends
+your query to the engine you picked (see Searches).
 
 ## Searches
 
