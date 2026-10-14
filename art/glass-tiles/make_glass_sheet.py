@@ -6,13 +6,15 @@ The tile look lives in TILE below (fractions of the tile size). Keep it in step 
 GLASS_DEFS in app.js.
 """
 import os
+import re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 T = 128                      # tile size in px
 TILE = {
     'radius': 0.18,          # corner radius
     'bevel_width': 0.10,     # stroke width of both bevels
-    'light_start': 0.84,     # light bevel runs from here (bottom-left) round to here (top-right)
+    'light': 'M.08 .841V.225Q.08 .088 .217 .088H.866',   # bevel paths in tile units (0-1)
+    'dark': 'M.929 .166V.785Q.929 .922 .793 .922H.141',
     'light_opacity': 0.60,
     'dark_opacity': 0.25,
     'shade': [(0, '#fff', .38), (.5, '#fff', .06), (.52, '#000', .02), (1, '#000', .30)],
@@ -28,17 +30,27 @@ def f(v):
     return f'{v:.2f}'.rstrip('0').rstrip('.')
 
 
+def place(d, x, y):
+    """Scale a unit-square path (M, V, H, Q only) to a tile at x, y."""
+    out = []
+    for cmd, args in re.findall(r'([MVHQ])([^MVHQ]*)', d):
+        n = [float(v) for v in re.findall(r'\d*\.?\d+', args)]
+        if cmd == 'H':
+            n = [x + n[0] * T]
+        elif cmd == 'V':
+            n = [y + n[0] * T]
+        else:
+            n = [(x if i % 2 == 0 else y) + v * T for i, v in enumerate(n)]
+        out.append(cmd + ' '.join(f(v) for v in n))
+    return ''.join(out)
+
+
 def tile(uid, colour, x, y):
     r, bw = TILE['radius'] * T, TILE['bevel_width'] * T
-    a, b = 0.08 * T, 0.92 * T          # bevel inset from each edge
-    c = TILE['light_start'] * T
-    q = 0.22 * T
     stops = ''.join(f'<stop offset="{o}" stop-color="{col}" stop-opacity="{op}"/>' for o, col, op in TILE['shade'])
     grad = (f'<linearGradient id="shade-{uid}" gradientUnits="userSpaceOnUse" x1="{x}" y1="{y}" x2="{x}" y2="{y + T}">'
             f'{stops}</linearGradient>')
-    light = f'M{f(x + a)} {f(y + c)}V{f(y + q)}Q{f(x + a)} {f(y + a)} {f(x + q)} {f(y + a)}H{f(x + c)}'
-    dark = (f'M{f(x + b)} {f(y + 0.14 * T)}V{f(y + 0.78 * T)}Q{f(x + b)} {f(y + b)} {f(x + 0.78 * T)} {f(y + b)}'
-            f'H{f(x + 0.10 * T)}')
+    light, dark = place(TILE['light'], x, y), place(TILE['dark'], x, y)
     body = (f'<g id="tile-{uid}">'
             f'<rect id="base-{uid}" x="{x}" y="{y}" width="{T}" height="{T}" rx="{f(r)}" fill="{colour}"/>'
             f'<rect id="shade-{uid}" x="{x}" y="{y}" width="{T}" height="{T}" rx="{f(r)}" fill="url(#shade-{uid})"/>'

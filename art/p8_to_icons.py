@@ -2,8 +2,10 @@
 """Turn 8x8 PICO-8 sprites into a JavaScript icon block.
 
 Usage: p8_to_icons.py CART.p8 MAP.json APP.js
-MAP.json: {"icons": {name: sprite}, "icons16": {name: top-left sprite of a 2x2 block},
-"palette": {index: colour}}. The optional palette
+MAP.json: {"icons": {name: spec}, "icons16": {name: top-left sprite of a 2x2 block},
+"palette": {index: colour}, "outline": colour index of the outline (default 13)}. A spec is a sprite number (an 8x8 crop) or
+{"cell": sprite, "pad": n}: the sprite's 8x8 cell plus n pixels on every side, for outlines
+that spill into the neighbouring cells (pad 1 gives a 10x10 icon). The optional palette
 table swaps a colour for another PICO-8 colour, including the hidden ones (128-143),
 which a cart can only reach through pal() at draw time. The block between
 /* BEGIN GENERATED ICONS */ and /* END GENERATED ICONS */ in APP.js is replaced.
@@ -32,9 +34,29 @@ def read_gfx(path):
     return rows
 
 
-def sprite(rows, n):
-    sx, sy = n % 16 * 8, n // 16 * 8
-    return [rows[sy + y][sx:sx + 8] for y in range(8)]
+def crop(rows, n, pad=0):
+    sx, sy = n % 16 * 8 - pad, n // 16 * 8 - pad
+    size = 8 + 2 * pad
+    if sx < 0 or sy < 0 or sx + size > 128 or sy + size > len(rows):
+        sys.exit(f'sprite {n} with pad {pad} reaches outside the sheet')
+    return [rows[sy + y][sx:sx + size] for y in range(size)]
+
+
+def missing_outline(art, outline):
+    """Count transparent cells outside the icon that touch its artwork (an outline pixel is missing)."""
+    size = len(art)
+    lit = {(x, y) for y, r in enumerate(art) for x, c in enumerate(r) if c != '0'}
+    core = {(x, y) for y, r in enumerate(art) for x, c in enumerate(r) if c not in ('0', outline)}
+    seen, stack = set(), [(-1, -1)]
+    while stack:
+        x, y = stack.pop()
+        if (x, y) in seen or (x, y) in lit or not (-1 <= x <= size and -1 <= y <= size):
+            continue
+        seen.add((x, y))
+        stack += [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
+    inside = [(x, y) for (x, y) in seen if 0 <= x < size and 0 <= y < size
+              and any((x + dx, y + dy) in core for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))]
+    return len(inside)
 
 
 def sprite16(rows, n):
@@ -54,11 +76,16 @@ def main():
         c = int(colour)
         palette[int(index)] = SECRET[c - 128] if c >= 128 else PALETTE[c]
     art = {}
-    for name, n in names.items():
-        s = sprite(rows, n)
+    for name, spec in names.items():
+        n, pad = (spec['cell'], spec.get('pad', 0)) if isinstance(spec, dict) else (spec, 0)
+        s = crop(rows, n, pad)
         if all(set(r) == {'0'} for r in s):
             sys.exit(f'sprite {n} ({name}) is empty')
         art[name] = s
+        if pad:
+            gaps = missing_outline(s, format(int(config.get('outline', 13)), 'x'))
+            if gaps:
+                print(f'note: {name} has {gaps} edge cells with no outline pixel')
     body = ['const ICON_PALETTE = ' + json.dumps(palette) + ';', 'const ICON_ART = {']
     for name, s in art.items():
         body.append(f"  {name}: {json.dumps(s)},")
@@ -69,10 +96,11 @@ def main():
         if all(set(r) == {'0'} for r in s):
             sys.exit(f'sprite block {n} ({name}) is empty')
         big[name] = s
-    body.append('const ICON_ART16 = {')
-    for name, s in big.items():
-        body.append(f"  {name}: {json.dumps(s)},")
-    body.append('};')
+    if big:
+        body.append('const ICON_ART16 = {')
+        for name, s in big.items():
+            body.append(f"  {name}: {json.dumps(s)},")
+        body.append('};')
     block = BEGIN + '\n' + '\n'.join(body) + '\n' + END
     src = open(appjs).read()
     pattern = re.compile(re.escape(BEGIN) + r'.*?' + re.escape(END), re.S)

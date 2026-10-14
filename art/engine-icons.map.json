@@ -1,24 +1,50 @@
 {
   "palette": {
-    "9": 137
+    "9": 137,
+    "13": 128
   },
   "icons": {
     "close": 0,
-    "bing": 2,
-    "brave": 3,
-    "wikipedia": 4,
-    "youtubemusic": 5,
-    "google": 6,
-    "duckduckgo": 7,
-    "startpage": 8,
-    "reddit": 9,
-    "youtube": 10,
-    "wallhaven": 11
+    "youtubemusic": {
+      "cell": 17,
+      "pad": 1
+    },
+    "google": {
+      "cell": 19,
+      "pad": 1
+    },
+    "duckduckgo": {
+      "cell": 21,
+      "pad": 1
+    },
+    "startpage": {
+      "cell": 23,
+      "pad": 1
+    },
+    "reddit": {
+      "cell": 25,
+      "pad": 1
+    },
+    "youtube": {
+      "cell": 27,
+      "pad": 1
+    },
+    "wallhaven": {
+      "cell": 29,
+      "pad": 1
+    },
+    "bing": {
+      "cell": 57,
+      "pad": 1
+    },
+    "brave": {
+      "cell": 59,
+      "pad": 1
+    },
+    "wikipedia": {
+      "cell": 61,
+      "pad": 1
+    }
   },
-  "icons16": {
-    "remove": 16,
-    "refresh": 18,
-    "add": 20,
-    "gear": 22
-  }
+  "outline": 13
 }

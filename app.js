@@ -89,25 +89,19 @@
     wallhaven:    {name:'Wallhaven',     url:'https://wallhaven.cc/search?q=%s'},
   };
   /* BEGIN GENERATED ICONS */
-const ICON_PALETTE = ["#000000", "#1D2B53", "#7E2553", "#008751", "#AB5236", "#5F574F", "#C2C3C7", "#FFF1E8", "#FF004D", "#FF6C24", "#FFEC27", "#00E436", "#29ADFF", "#83769C", "#FF77A8", "#FFCCAA"];
+const ICON_PALETTE = ["#000000", "#1D2B53", "#7E2553", "#008751", "#AB5236", "#5F574F", "#C2C3C7", "#FFF1E8", "#FF004D", "#FF6C24", "#FFEC27", "#00E436", "#29ADFF", "#291814", "#FF77A8", "#FFCCAA"];
 const ICON_ART = {
   close: ["00000000", "00000000", "00700700", "00077000", "00077000", "00700700", "00000000", "00000000"],
-  bing: ["00000000", "0cc00000", "0cc00000", "0ccccc00", "0cc00cc0", "0cc00cc0", "0ccccc00", "00000000"],
-  brave: ["00000000", "99999999", "97999979", "99777799", "99977999", "09999990", "00999900", "00099000"],
-  wikipedia: ["07777770", "77777777", "70777707", "70777707", "70700707", "77077077", "77777777", "07777770"],
-  youtubemusic: ["08888880", "88878888", "88877888", "88877788", "88877788", "88877888", "88878888", "08888880"],
-  google: ["00888880", "08800088", "aa000000", "aa000000", "aa00cccc", "330000cc", "03300033", "00333330"],
-  duckduckgo: ["00999900", "09999990", "99977999", "99707799", "99777aa9", "99977999", "09999990", "00999900"],
-  startpage: ["07777770", "77111777", "71777177", "71777177", "71777177", "77111777", "77777717", "07777770"],
-  reddit: ["00999900", "09799990", "99979999", "97777779", "97977979", "97777779", "09777790", "00999900"],
-  youtube: ["00888800", "08878880", "88877888", "88877788", "88877788", "88877888", "08878880", "00888800"],
-  wallhaven: ["07777770", "77777717", "77777777", "77777d77", "1777ddd7", "117ddddd", "111ddddd", "0111ddd0"],
-};
-const ICON_ART16 = {
-  remove: ["7700000000000077", "7770000000000777", "0777000000007770", "0077700000077700", "0007770000777000", "0000777007770000", "0000077777700000", "0000007777000000", "0000007777000000", "0000077777700000", "0000777007770000", "0007770000777000", "0077700000077700", "0777000000007770", "7770000000000777", "7700000000000077"],
-  refresh: ["0000077777700000", "0007777777777000", "0077700000077700", "0777000000007700", "0770000000007700", "7700000007077700", "7700000007777000", "7700000007770000", "7700000007777000", "7700000000000000", "7700000000000000", "0770000000000000", "0777000000007700", "0077700000077700", "0007777777777000", "0000077777700000"],
-  add: ["0777777777777770", "7777777777777777", "7777777777777777", "7777777777700077", "7777777777700077", "7777777777700077", "7777777777777777", "7777777777777777", "7700777777777777", "7000077000777777", "0077000070077777", "0777700777007777", "7777770077700777", "7777777007770077", "7777777777777007", "0777777777777700"],
-  gear: ["0000000000000000", "0077000770007700", "0777707777077770", "0777777777777770", "0077777777777700", "0007777007777000", "0077770000777700", "0777700000077770", "0777700000077770", "0077770000777700", "0007777007777000", "0077777777777700", "0777777777777770", "0777707777077770", "0077000770007700", "0000000000000000"],
+  youtubemusic: ["0dddddddd0", "dd888888dd", "d88878888d", "d88877888d", "d88877788d", "d88877788d", "d88877888d", "d88878888d", "dd888888dd", "0dddddddd0"],
+  google: ["000ddddd00", "00d88888d0", "0d887778d0", "daa77777d0", "daa777777d", "daa77ccccd", "d337777ccd", "0d3377733d", "00d33333d0", "000ddddd00"],
+  duckduckgo: ["000dddd000", "00d9999d00", "0d999999d0", "d99977999d", "d997d7799d", "d99777aa9d", "d99977999d", "0d999999d0", "00d9999d00", "000dddd000"],
+  startpage: ["0dddddddd0", "dd777777dd", "d77111776d", "d71777176d", "d71777176d", "d71777176d", "d77111776d", "d77777716d", "dd666666dd", "0dddddddd0"],
+  reddit: ["000dddd000", "00d9999d00", "0d979999d0", "d99979999d", "d97777779d", "d97977979d", "d97777779d", "0d977779d0", "00d9999d00", "000dddd000"],
+  youtube: ["000dddd000", "00d8888d00", "0d887888d0", "d88877888d", "d88877788d", "d88877788d", "d88877888d", "0d887888d0", "00d8888d00", "000dddd000"],
+  wallhaven: ["0dddddddd0", "dd777777dd", "d77777717d", "d77777777d", "d77777177d", "d17771117d", "d11711111d", "d11111111d", "dd666666dd", "0dddddddd0"],
+  bing: ["00dd000000", "0dccd00000", "0dccddd000", "0dcccccd00", "0dccddccd0", "0dccddccd0", "0dccddccd0", "0dcccccd00", "00ddddd000", "0000000000"],
+  brave: ["0000000000", "0dddddddd0", "d99999999d", "d97999979d", "d99777799d", "d99977999d", "0d999999d0", "00d9999d00", "000d99d000", "0000dd0000"],
+  wikipedia: ["0dddddddd0", "dd777777dd", "d77777776d", "d7d7777d6d", "d7d7777d6d", "d7d7dd7d6d", "d77d77d76d", "d77777776d", "dd666666dd", "0dddddddd0"],
 };
 /* END GENERATED ICONS */
 
@@ -123,10 +117,10 @@ const ICON_ART16 = {
     '<stop offset="0" stop-color="#fff" stop-opacity=".38"/><stop offset=".5" stop-color="#fff" stop-opacity=".06"/>' +
     '<stop offset=".52" stop-color="#000" stop-opacity=".02"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient>' +
     '<g id="o"><rect width="1" height="1" rx=".18" fill="url(#s)"/>' +
-    '<path d="M.08 .84V.22Q.08 .08 .22 .08H.84" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width=".1" stroke-linecap="round" stroke-linejoin="round"/>' +
-    '<path d="M.92 .14V.78Q.92 .92 .78 .92H.1" fill="none" stroke="#000" stroke-opacity=".25" stroke-width=".1" stroke-linecap="round" stroke-linejoin="round"/></g></defs>';
-  function glassSvg(cells, backdrop = ''){
-    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8">' + GLASS_DEFS + backdrop +
+    '<path d="M.08 .841V.225Q.08 .088 .217 .088H.866" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width=".1" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<path d="M.929 .166V.785Q.929 .922 .793 .922H.141" fill="none" stroke="#000" stroke-opacity=".25" stroke-width=".1" stroke-linecap="round" stroke-linejoin="round"/></g></defs>';
+  function glassSvg(cells, backdrop = '', size = 8, pad = 0){
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${-pad} ${-pad} ${size + 2 * pad} ${size + 2 * pad}">` + GLASS_DEFS + backdrop +
       cells.map(([x, y, c]) => `<rect x="${x}" y="${y}" width="1" height="1" rx=".18" fill="${c}"/><use href="#o" x="${x}" y="${y}"/>`).join('') + '</svg>';
   }
   const iconMemo = {};
@@ -138,24 +132,11 @@ const ICON_ART16 = {
       const i = parseInt(ch, 16);
       if(i) cells.push([x, y, ICON_PALETTE[i]]);
     }));
-    return (iconMemo[key] = svgUri(glass ? glassSvg(cells) : pixelSvg(cells)));
+    const size = ICON_ART[name].length;
+    return (iconMemo[key] = svgUri(glass ? glassSvg(cells, '', size) : pixelSvg(cells, '', size)));
   }
-  function iconUri16(name){
-    const key = name + '@16';
-    if(iconMemo[key]) return iconMemo[key];
-    const cells = [];
-    ICON_ART16[name].forEach((row, y) => [...row].forEach((ch, x) => {
-      const i = parseInt(ch, 16);
-      if(i) cells.push([x, y, ICON_PALETTE[i]]);
-    }));
-    return (iconMemo[key] = svgUri(pixelSvg(cells, '', 16)));
-  }
-  document.querySelectorAll('img[data-icon]').forEach(img => {
-    const name = img.dataset.icon;
-    img.src = name in ICON_ART16 ? iconUri16(name) : iconUri(name);
-  });
 
-  const IDENT_COLOURS = [12, 14, 9, 11, 13, 10, 8, 6].map(i => ICON_PALETTE[i]);
+  const IDENT_COLOURS = [12, 14, 9, 11, 3, 2, 8, 1].map(i => ICON_PALETTE[i]);
   function seededRandom(seed){
     let s = seed >>> 0;
     return () => {
@@ -182,7 +163,25 @@ const ICON_ART16 = {
       const x = i % 3, y = Math.floor(i / 3);
       px.push([1 + x, 1 + y, colour], [6 - x, 1 + y, colour]);
     });
-    return svgUri(glassSvg(px, '<path fill="#2A2A28" d="M1 0h6v1h1v6h-1v1H1v-1H0V1h1z"/>'));
+    // outline the dark tile the same way the engine icons are outlined (palette colour 13)
+    const shape = new Set();
+    for(let y = 0; y < 8; y++) for(let x = 0; x < 8; x++){
+      if((x === 0 || x === 7) && (y === 0 || y === 7)) continue;
+      shape.add(x + ',' + y);
+    }
+    const outline = new Set();
+    for(const key of shape){
+      const [x, y] = key.split(',').map(Number);
+      for(const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]){
+        const n = (x + dx) + ',' + (y + dy);
+        if(!shape.has(n)) outline.add(n);
+      }
+    }
+    const toCells = (set, colour) => [...set].map(k => { const [x, y] = k.split(',').map(Number); return [x, y, colour]; });
+    // cream backing tile with a grey shade along the right and bottom, like the Wikipedia icon
+    const ground = toCells(shape, ICON_PALETTE[7]).map(([x, y, c]) => (x === 7 || y === 7) ? [x, y, ICON_PALETTE[6]] : [x, y, c]);
+    const ring = toCells(outline, ICON_PALETTE[13]);
+    return svgUri(glassSvg(ground.concat(px, ring), '', 8, 1));
   }
 
   const SEARCH_ICON = 'data:image/svg+xml,' + encodeURIComponent(
@@ -233,6 +232,7 @@ const ICON_ART16 = {
 
   const makeIcon = src => { const img = document.createElement('img'); img.src = src; img.alt = ''; return img; };
   const engineIcon = e => makeIcon(e.icon);
+  engineToggle.append(makeIcon(SEARCH_ICON));   // the toggle keeps the magnifier; engine icons live in the menu
 
   const addBtn = document.createElement('button');
   addBtn.type = 'button'; addBtn.className = 'engine-add'; addBtn.textContent = '+ Add search engine';
@@ -252,9 +252,9 @@ const ICON_ART16 = {
   const showPreview = ()=>{ preview.src = identiconUri(pendingSeed); };
   addForm.querySelector('.ef-shuffle').addEventListener('click', ()=>{ pendingSeed = newSeed(); showPreview(); });
 
-  function updateEngineToggleIcon(){
+  function updateEngineToggle(){
     const e = activeEngine();
-    engineToggle.replaceChildren(engineIcon(e));
+    searchInput.placeholder = e.key === 'default' ? 'Search the web…' : 'Search ' + e.name + '…';
     engineToggle.setAttribute('aria-label', 'Search engine: ' + e.name);
   }
   function renderEngineMenu(){
@@ -282,7 +282,7 @@ const ICON_ART16 = {
   function selectEngine(key){
     currentEngine = key;
     lsSet('engine', key);
-    updateEngineToggleIcon();
+    updateEngineToggle();
     renderEngineMenu();
   }
   function removeCustomEngine(e){
@@ -373,7 +373,7 @@ const ICON_ART16 = {
   });
 
   renderEngineMenu();
-  updateEngineToggleIcon();
+  updateEngineToggle();
 
   /* ---------- wallpaper ---------- */
   const bgEl = document.getElementById('bg');
