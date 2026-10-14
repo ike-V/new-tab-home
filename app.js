@@ -185,7 +185,9 @@ const ICON_ART = {
   }
 
   const SEARCH_ICON = 'data:image/svg+xml,' + encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="10.5" r="6.5"/><path d="M16 15.5l4.5 4.5"/></svg>');
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round">' +
+    '<g stroke="#000" stroke-width="4.8"><circle cx="11" cy="10.5" r="6.5"/><path d="M16 15.5l4.5 4.5"/></g>' +
+    '<g stroke="#fff" stroke-width="2.4"><circle cx="11" cy="10.5" r="6.5"/><path d="M16 15.5l4.5 4.5"/></g></svg>');
 
   const hasBrowserSearch = ()=> typeof chrome !== 'undefined' && !!chrome.search && typeof chrome.search.query === 'function';
   const searchUrl = (template, q)=> template.replace('%s', ()=> encodeURIComponent(q));
@@ -299,12 +301,17 @@ const ICON_ART = {
     engineMenu.classList.remove('open');
     closeEngineForm();
   }
+  const MENU_EDGE = 12;   // gap kept between the menu and the page edge
   function positionEngineMenu(){
     const rect = searchWrap.getBoundingClientRect();
-    const spaceBelow = window.innerHeight - rect.bottom - 8;
-    const spaceAbove = rect.top - 8;
-    engineMenu.classList.toggle('flip-up', spaceBelow < engineMenu.scrollHeight && spaceAbove > spaceBelow);
+    const below = window.innerHeight - rect.bottom - 8 - MENU_EDGE;
+    const above = rect.top - 8 - MENU_EDGE;
+    engineMenu.style.maxHeight = 'none';
+    const flip = engineMenu.scrollHeight > below && above > below;
+    engineMenu.classList.toggle('flip-up', flip);
+    engineMenu.style.maxHeight = Math.max(160, Math.floor(flip ? above : below)) + 'px';
   }
+  window.addEventListener('resize', ()=>{ if(engineMenu.classList.contains('open')) positionEngineMenu(); });
   function saveEngine(){
     const name = nameInput.value.trim();
     const url = urlInput.value.trim();
