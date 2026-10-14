@@ -10,3 +10,4 @@ screenshots/Image.jpg
 
 # Built extension package
 store-assets/*.zip
+store-assets/test-build/

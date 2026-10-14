@@ -5,7 +5,8 @@ Usage: p8_to_icons.py CART.p8 MAP.json APP.js
 MAP.json: {"icons": {name: spec}, "icons16": {name: top-left sprite of a 2x2 block},
 "palette": {index: colour}, "outline": colour index of the outline (default 13)}. A spec is a sprite number (an 8x8 crop) or
 {"cell": sprite, "pad": n}: the sprite's 8x8 cell plus n pixels on every side, for outlines
-that spill into the neighbouring cells (pad 1 gives a 10x10 icon). The optional palette
+that spill into the neighbouring cells (pad 1 gives a 10x10 icon), or {"x": px, "y": py, "size": 10}:
+a square cut from any pixel position (no sprite grid needed). The optional palette
 table swaps a colour for another PICO-8 colour, including the hidden ones (128-143),
 which a cart can only reach through pal() at draw time. The block between
 /* BEGIN GENERATED ICONS */ and /* END GENERATED ICONS */ in APP.js is replaced.
@@ -40,6 +41,12 @@ def crop(rows, n, pad=0):
     if sx < 0 or sy < 0 or sx + size > 128 or sy + size > len(rows):
         sys.exit(f'sprite {n} with pad {pad} reaches outside the sheet')
     return [rows[sy + y][sx:sx + size] for y in range(size)]
+
+
+def crop_at(rows, x, y, size):
+    if x < 0 or y < 0 or x + size > 128 or y + size > len(rows):
+        sys.exit(f'icon at {x},{y} size {size} reaches outside the sheet')
+    return [rows[y + k][x:x + size] for k in range(size)]
 
 
 def missing_outline(art, outline):
@@ -77,8 +84,11 @@ def main():
         palette[int(index)] = SECRET[c - 128] if c >= 128 else PALETTE[c]
     art = {}
     for name, spec in names.items():
-        n, pad = (spec['cell'], spec.get('pad', 0)) if isinstance(spec, dict) else (spec, 0)
-        s = crop(rows, n, pad)
+        if isinstance(spec, dict) and 'x' in spec:
+            s, pad, n = crop_at(rows, spec['x'], spec['y'], spec.get('size', 10)), 1, f"{spec['x']},{spec['y']}"
+        else:
+            n, pad = (spec['cell'], spec.get('pad', 0)) if isinstance(spec, dict) else (spec, 0)
+            s = crop(rows, n, pad)
         if all(set(r) == {'0'} for r in s):
             sys.exit(f'sprite {n} ({name}) is empty')
         art[name] = s

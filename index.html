@@ -123,18 +123,21 @@
     color:var(--text); font-size:13px; text-align:left; cursor:pointer;
   }
   .engine-menu button:hover{ background:rgba(255,255,255,0.12); }
-  .engine-menu img{ width:var(--engine-icon); height:var(--engine-icon); flex:none; }
+  .engine-menu img{
+    width:calc(var(--engine-icon) + 12px); height:calc(var(--engine-icon) + 12px); padding:5px; flex:none;
+    border-radius:10px; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.22);
+  }
   .ef-iconrow{ display:flex; align-items:center; gap:10px; }
   .engine-menu [hidden]{ display:none; }
   #wallpaper-menu{ width:auto; flex-direction:row; gap:4px; }
   #wallpaper-menu button{ width:40px; height:40px; padding:0; justify-content:center; }
-  .engine-menu .engine-remove img{ width:16px; height:16px; image-rendering:pixelated; }
+  .engine-menu .engine-remove img{ width:16px; height:16px; padding:0; border:0; border-radius:0; background:none; image-rendering:pixelated; }
   .engine-row{ display:flex; align-items:center; border-radius:8px; }
   .engine-row.active{ background:rgba(255,255,255,0.08); }
-  .engine-menu .engine-pick{ flex:1; min-width:0; }
+  .engine-menu .engine-pick{ flex:1; min-width:0; padding:4px 10px 4px 4px; }
   .engine-menu .engine-pick span{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .engine-menu .engine-remove{ padding:6px 10px; font-size:16px; line-height:1; color:var(--text-dim); }
-  .engine-menu .engine-add{ color:var(--text-dim); }
+  .engine-menu .engine-add{ color:var(--text-dim); padding-left:4px; }
   .engine-form{ display:flex; flex-direction:column; gap:6px; padding:4px; }
   .engine-form input{
     width:100%; padding:8px 10px; border-radius:8px;

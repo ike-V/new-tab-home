@@ -80,27 +80,27 @@
     google:       {name:'Google',        url:'https://www.google.com/search?q=%s'},
     bing:         {name:'Bing',          url:'https://www.bing.com/search?q=%s'},
     duckduckgo:   {name:'DuckDuckGo',    url:'https://duckduckgo.com/?q=%s'},
-    brave:        {name:'Brave Search',  url:'https://search.brave.com/search?q=%s'},
     startpage:    {name:'Startpage',     url:'https://www.startpage.com/do/search?q=%s'},
+    brave:        {name:'Brave',         url:'https://search.brave.com/search?q=%s'},
     wikipedia:    {name:'Wikipedia',     url:'https://en.wikipedia.org/w/index.php?search=%s'},
     reddit:       {name:'Reddit',        url:'https://www.reddit.com/search/?q=%s'},
+    wallhaven:    {name:'Wallhaven',     url:'https://wallhaven.cc/search?q=%s'},
     youtube:      {name:'YouTube',       url:'https://www.youtube.com/results?search_query=%s'},
     youtubemusic: {name:'YouTube Music', url:'https://music.youtube.com/search?q=%s'},
-    wallhaven:    {name:'Wallhaven',     url:'https://wallhaven.cc/search?q=%s'},
   };
   /* BEGIN GENERATED ICONS */
 const ICON_PALETTE = ["#000000", "#1D2B53", "#7E2553", "#008751", "#AB5236", "#5F574F", "#C2C3C7", "#FFF1E8", "#FF004D", "#FF6C24", "#FFEC27", "#00E436", "#29ADFF", "#291814", "#FF77A8", "#FFCCAA"];
 const ICON_ART = {
   close: ["00000000", "00000000", "00700700", "00077000", "00077000", "00700700", "00000000", "00000000"],
-  youtubemusic: ["0dddddddd0", "dd888888dd", "d88878888d", "d88877888d", "d88877788d", "d88877788d", "d88877888d", "d88878888d", "dd888888dd", "0dddddddd0"],
+  youtubemusic: ["000dddd000", "00d8888d00", "0d887888d0", "d88877888d", "d88877788d", "d88877788d", "d88877888d", "0d887888d0", "00d8888d00", "000dddd000"],
   google: ["000ddddd00", "00d88888d0", "0d887778d0", "daa77777d0", "daa777777d", "daa77ccccd", "d337777ccd", "0d3377733d", "00d33333d0", "000ddddd00"],
   duckduckgo: ["000dddd000", "00d9999d00", "0d999999d0", "d99977999d", "d997d7799d", "d99777aa9d", "d99977999d", "0d999999d0", "00d9999d00", "000dddd000"],
   startpage: ["0dddddddd0", "dd777777dd", "d77111776d", "d71777176d", "d71777176d", "d71777176d", "d77111776d", "d77777716d", "dd666666dd", "0dddddddd0"],
   reddit: ["000dddd000", "00d9999d00", "0d979999d0", "d99979999d", "d97777779d", "d97977979d", "d97777779d", "0d977779d0", "00d9999d00", "000dddd000"],
-  youtube: ["000dddd000", "00d8888d00", "0d887888d0", "d88877888d", "d88877788d", "d88877788d", "d88877888d", "0d887888d0", "00d8888d00", "000dddd000"],
-  wallhaven: ["0dddddddd0", "dd777777dd", "d77777717d", "d77777777d", "d77777177d", "d17771117d", "d11711111d", "d11111111d", "dd666666dd", "0dddddddd0"],
-  bing: ["00dd000000", "0dccd00000", "0dccddd000", "0dcccccd00", "0dccddccd0", "0dccddccd0", "0dccddccd0", "0dcccccd00", "00ddddd000", "0000000000"],
-  brave: ["0000000000", "0dddddddd0", "d99999999d", "d97999979d", "d99777799d", "d99977999d", "0d999999d0", "00d9999d00", "000d99d000", "0000dd0000"],
+  youtube: ["0dddddddd0", "dd888888dd", "d88878888d", "d88877888d", "d88877788d", "d88877788d", "d88877888d", "d88878888d", "dd888888dd", "0dddddddd0"],
+  wallhaven: ["0dddddddd0", "dd777777dd", "d77777716d", "d77777776d", "d77777176d", "d17771116d", "d11711111d", "d11111111d", "dd666666dd", "0dddddddd0"],
+  bing: ["00dd000000", "0dccd00000", "0dccd00000", "0dccddd000", "0dcccccd00", "0dccddccd0", "0dccddccd0", "0dccddccd0", "0ddccccd00", "00ddddd000"],
+  brave: ["0dddddddd0", "dd999999dd", "d97999979d", "d99777799d", "d99777799d", "d99977999d", "0d999999d0", "00d9999d00", "000d99d000", "0000dd0000"],
   wikipedia: ["0dddddddd0", "dd777777dd", "d77777776d", "d7d7777d6d", "d7d7777d6d", "d7d7dd7d6d", "d77d77d76d", "d77777776d", "dd666666dd", "0dddddddd0"],
 };
 /* END GENERATED ICONS */
