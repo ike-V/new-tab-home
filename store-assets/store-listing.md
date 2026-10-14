@@ -4,7 +4,7 @@ Build both ZIPs first: `python3 store-assets/build_zip.py`
 - `new-tab-home.zip`: Chrome Web Store and Edge Add-ons
 - `new-tab-home-firefox.zip`: Firefox Add-ons
 
-Shared assets: icon `icons/icon128.png`; screenshots `screenshots/screenshot-store-*.png` (1280×800, local); Edge logo `store-assets/store-logo-300x300.png`; promo tiles `store-assets/promo-tile-440x280.png`, `store-assets/marquee-tile-1400x560.png`.
+Shared assets: icon `icons/icon128.png`; screenshots `screenshots/screenshot-store-1..4-*.png` (1280×800, local; #4 is `store-assets/icons-names-1280x800.png`); Edge logo `store-assets/store-logo-300x300.png`; promo tiles `store-assets/promo-tile-440x280.png`, `store-assets/marquee-tile-1400x560.png` (sources: `promo-tile.html`, `marquee-tile.html`).
 Privacy policy URL (must be on `main`): https://github.com/ike-V/new-tab-home/blob/main/PRIVACY.md
 Source: https://github.com/ike-V/new-tab-home · Issues: https://github.com/ike-V/new-tab-home/issues
 

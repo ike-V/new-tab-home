@@ -1,126 +1,255 @@
-<!doctype html><meta charset="utf-8">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marquee</title>
+<link rel="icon" href="../icons/icon48.png">
 <style>
-html,body{margin:0;overflow:hidden}
-body{position:relative;background:url("wallpapers/marble-green.png") center / cover;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#fff}
-body::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,.3) 60%,rgba(0,0,0,.2))}
-body>*{position:relative}
-.logo{display:block;border-radius:22%;box-shadow:0 0 0 1px #000,0 8px 24px rgba(0,0,0,.45)}
-.title{font-family:ui-rounded,"SF Pro Rounded","Arial Rounded MT Bold",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-weight:700;margin:0;line-height:1;-webkit-text-stroke:8px #000;paint-order:stroke fill}
-.tag{margin:0;color:#e6e6e6;-webkit-text-stroke:2px #000;paint-order:stroke fill}
-.plates{display:flex}
-.plates img{box-sizing:border-box;flex:none;border-radius:22%;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);box-shadow:0 0 0 1px #000}
-html,body{width:1400px;height:560px}
-body{display:flex;align-items:center;justify-content:space-between;padding:0 100px;box-sizing:border-box}
-.left{display:flex;flex-direction:column;gap:22px}
-.logo{width:132px;height:132px;box-shadow:0 0 0 2px #000,0 14px 40px rgba(0,0,0,.5)}
-.title{font-size:70px;white-space:nowrap}
-.tag{font-size:32px;-webkit-text-stroke:3px #000}
-.plates{gap:12px;margin-top:6px}
-.plates img{width:56px;height:56px;padding:7px;box-shadow:0 0 0 2px #000}
-.card{width:550px;height:450px;border-radius:26px;box-shadow:0 0 0 2px #000,0 24px 70px rgba(0,0,0,.5);background:url("tile-card.png") center/cover}
+  :root{
+    --engine-icon:23.4px;
+    --glass-bg: rgba(20,20,20,0.35);
+    --glass-border: rgba(255,255,255,0.18);
+    --text: #ffffff;
+    --text-dim: rgba(255,255,255,0.75);
+  }
+  *{ box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; height:100%; width:100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    overflow:hidden;
+    color: var(--text);
+  }
+  #bg{
+    position:fixed; inset:0;
+    background-size:cover;
+    background-position:center;
+    background-color:#1a1a1a;
+    transition: background-image 0.6s ease-in-out;
+    z-index:-2;
+  }
+  #bg::after{
+    content:"";
+    position:absolute; inset:0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.35));
+    z-index:-1;
+  }
+  #bg-fallback-note{
+    position:fixed; bottom:14px; left:14px;
+    font-size:11px; color:var(--text-dim);
+    max-width:234px; line-height:1.4;
+    background:var(--glass-bg); backdrop-filter: blur(10px);
+    padding:7px 11px; border-radius:9px;
+    border:1px solid var(--glass-border);
+    display:none;
+  }
+  #note-action{
+    display:block; margin-top:7px; padding:5px 11px;
+    border-radius:999px; border:1px solid var(--glass-border);
+    background:rgba(255,255,255,0.12); color:var(--text);
+    font:inherit; cursor:pointer;
+  }
+  #note-action:hover{ background:rgba(255,255,255,0.2); }
+  #note-action[hidden]{ display:none; }
+
+  .center{
+    height:100%; width:100%;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    gap:12px;
+  }
+
+  #clock{
+    font-family: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size:80px; font-weight:700;
+    -webkit-text-stroke:4px #000; paint-order:stroke fill;
+    letter-spacing:.9px;
+    line-height:1; margin-bottom:-2px;
+    text-align: center;
+  }
+  #date{
+    margin-top:0px;
+    font-size:16px; font-weight:400;
+    color:#e6e6e6;
+    -webkit-text-stroke:2px #000; paint-order:stroke fill;
+    text-align: center;
+  }
+
+  #search-wrap{
+    width:min(504px, 86vw);
+    position:relative;
+  }
+  #search{
+    width:100%;
+    padding:14px 20px;
+    font-size:14.4px;
+    border-radius:999px;
+    border:1px solid var(--glass-border);
+    background:var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    color:var(--text);
+    outline:none;
+    -webkit-text-stroke:1.8px #000; paint-order:stroke fill;
+    box-shadow: 0 0 0 1px #000, 0 7px 27px rgba(0,0,0,0.25);
+  }
+  #search::placeholder{ color:#d8d8d8; -webkit-text-stroke:1.8px #000; paint-order:stroke fill; }
+  #search:focus{ border-color: rgba(255,255,255,0.4); }
+
+  .engine-toggle{
+    position:absolute; top:50%; right:7px; transform:translateY(-50%);
+    width:31px; height:31px; border-radius:50%;
+    border:1px solid var(--glass-border); background:rgba(255,255,255,0.2);
+    box-shadow:0 0 0 1px #000;
+    cursor:pointer; padding:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .engine-toggle img{ width:16px; height:16px; }
+  .engine-menu{
+    position:absolute; top:calc(100% + 7px); right:0;
+    width:min(234px, 86vw);
+    max-height:min(288px, 60vh);
+    overflow-y:auto;
+    scrollbar-width:none;
+    background:var(--glass-bg); backdrop-filter: blur(16px);
+    border:1px solid var(--glass-border); border-radius:13px;
+    padding:5px; display:none; flex-direction:column; gap:2px;
+    box-shadow:0 0 0 1px #000, 0 9px 36px rgba(0,0,0,0.4);
+    z-index:5;
+  }
+  .engine-menu::-webkit-scrollbar{ display:none; }
+  .engine-menu.open{ display:flex; }
+  .engine-menu.flip-up{ top:auto; bottom:calc(100% + 7px); }
+  .engine-menu button{
+    display:flex; align-items:center; gap:9px;
+    padding:7px 9px; border-radius:7px; border:none; background:none;
+    color:var(--text); font-size:11.7px; text-align:left; cursor:pointer;
+    -webkit-text-stroke:2px #000; paint-order:stroke fill;
+  }
+  .engine-menu button:hover{ background:rgba(255,255,255,0.12); }
+  .engine-menu img{
+    width:calc(var(--engine-icon) + 11px); height:calc(var(--engine-icon) + 11px); padding:4.5px; flex:none;
+    border-radius:9px; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.22);
+    box-shadow:0 0 0 1px #000;
+  }
+  .ef-iconrow{ display:flex; align-items:center; gap:9px; }
+  .engine-menu [hidden]{ display:none; }
+  #wallpaper-menu{
+    width:auto; flex-direction:column; gap:7px; padding:0; max-height:none; overflow:visible;
+    background:none; border:0; box-shadow:none; backdrop-filter:none;
+  }
+  #wallpaper-menu button{
+    width:32px; height:32px; padding:0; justify-content:center; border-radius:50%;
+    background:rgba(255,255,255,0.2); border:1px solid var(--glass-border); box-shadow:0 0 0 1px #000;
+    backdrop-filter:blur(12px);
+  }
+  #wallpaper-menu button:hover{ background:rgba(255,255,255,0.3); }
+  .engine-menu .engine-remove img{ width:14px; height:14px; padding:0; border:0; border-radius:0; background:none; box-shadow:none; image-rendering:pixelated; }
+  .engine-row{ display:flex; align-items:center; border-radius:7px; }
+  .engine-row.active{ background:rgba(255,255,255,0.08); }
+  .engine-menu .engine-pick{ flex:1; min-width:0; padding:4px 9px 4px 4px; }
+  .engine-menu .engine-pick span{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .engine-menu .engine-remove{ padding:5px 9px; font-size:14px; line-height:1; color:var(--text-dim); }
+  .engine-menu .engine-add{ color:var(--text-dim); padding-left:4px; }
+  .engine-form{ display:flex; flex-direction:column; gap:5px; padding:4px; }
+  .engine-form input{
+    width:100%; padding:7px 9px; border-radius:7px;
+    border:1px solid var(--glass-border); background:rgba(255,255,255,0.08);
+    color:var(--text); font-size:11.7px; outline:none;
+  }
+  .engine-form input::placeholder{ color:var(--text-dim); }
+  .engine-form input:focus{ border-color:rgba(255,255,255,0.4); }
+  .engine-form .ef-error{ font-size:11px; line-height:1.3; color:#ff9b9b; }
+  .engine-form .ef-error:empty{ display:none; }
+  .engine-form .ef-actions{ display:flex; gap:5px; justify-content:flex-end; }
+  .engine-menu .ef-save{ background:rgba(255,255,255,0.16); }
+
+  #toolbar{
+    position:fixed; top:14px; right:14px;
+    display:flex; gap:7px;
+  }
+  .tool-btn{
+    width:32px; height:32px; border-radius:50%;
+    background:var(--glass-bg); backdrop-filter: blur(12px);
+    border:1px solid var(--glass-border);
+    color:var(--text); cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px;
+    padding:0;
+    appearance:none; -webkit-appearance:none;
+    font-family:inherit;
+  }
+  #wallpaper-btn{ background:rgba(255,255,255,0.2); box-shadow:0 0 0 1px #000; }
+  .tool-btn svg, #wallpaper-menu svg{ overflow:visible; }
+  .tool-btn:hover, #wallpaper-btn:hover{ background:rgba(255,255,255,0.3); }
+
+  #drop-hint{
+    position:fixed; inset:0; display:none;
+    align-items:center; justify-content:center;
+    background:rgba(0,0,0,0.5); z-index:10;
+    font-size:20px; color:#fff; pointer-events:none;
+  }
+  #drop-hint.show{ display:flex; }
+
+html,body{width:1400px;height:560px;overflow:hidden}
+#bg{background-image:url("wallpapers/marble-green.png")!important;background-position:center!important}
+#shade{position:fixed;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(0,0,0,.5),rgba(0,0,0,.25) 50%,rgba(0,0,0,0) 75%)}
+.center{position:absolute;left:512px;top:0;width:560px;height:448px;zoom:1.25;gap:12px}
+#toolbar{zoom:1.25}
+#brand{position:absolute;left:70px;top:0;width:560px;height:560px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;text-align:center}
+#brand img{width:132px;height:132px;border-radius:22%;box-shadow:0 0 0 2px #000,0 14px 40px rgba(0,0,0,.5)}
+#brand h1{font-family:ui-rounded,"SF Pro Rounded","Arial Rounded MT Bold",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-weight:700;font-size:62px;white-space:nowrap;margin:0;line-height:1;-webkit-text-stroke:6px #000;paint-order:stroke fill}
+#brand p{margin:0;font-size:29px;color:#e6e6e6;-webkit-text-stroke:3px #000;paint-order:stroke fill}
 </style>
-<div class="left">
-  <img class="logo" src="store-logo-300x300.png">
-  <h1 class="title">New Tab Home ~/</h1>
-  <p class="tag">A new tab that is truly yours.</p>
-  <div class="plates" id="p"></div>
+</head>
+<body>
+
+<div id="bg"></div>
+<div id="shade"></div>
+<div id="brand"><img src="store-logo-300x300.png"><h1>New Tab Home ~/</h1><p>A new tab that is truly yours.</p></div>
+
+<div id="bg-fallback-note"><span id="note-text"></span><button type="button" id="note-action" hidden></button></div>
+
+<div class="center">
+  <div>
+    <div id="clock">--:--</div>
+    <div id="date">-</div>
+  </div>
+
+  <div>
+    <div id="search-wrap">
+      <form id="search-form">
+        <input id="search" type="text" placeholder="Search the web…" autofocus autocomplete="off">
+      </form>
+      <button type="button" id="engine-toggle" class="engine-toggle" title="Choose search engine"></button>
+      <div id="engine-menu" class="engine-menu"></div>
+    </div>
+  </div>
+
 </div>
-<div class="card"></div>
+
+<div id="toolbar">
+ <button type="button" class="tool-btn" id="wallpaper-btn" title="Wallpaper settings" aria-label="Wallpaper settings"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g stroke="#000" stroke-width="4.7"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></g><g stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></g></svg></button>
+ <div id="wallpaper-menu" class="engine-menu">
+  <button type="button" id="wp-add" title="Add images" aria-label="Add images"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g stroke="#000" stroke-width="4.7"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 9"/></g><g stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 9"/></g></svg></button>
+  <button type="button" id="wp-next" title="Show another" aria-label="Show another"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g stroke="#000" stroke-width="4.7"><path d="M20 12a8 8 0 1 1-2.5-5.8"/><path d="M20 4v5h-5"/></g><g stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 1 1-2.5-5.8"/><path d="M20 4v5h-5"/></g></svg></button>
+  <button type="button" id="wp-remove" title="Remove this image" aria-label="Remove this image"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g stroke="#000" stroke-width="4.7"><path d="M6 6l12 12M18 6L6 18"/></g><g stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></g></svg></button>
+ </div>
+</div>
+
+<div id="drop-hint">Drop images to add them as wallpapers</div>
+<input type="file" id="wallpaper-input" accept="image/*" multiple hidden>
+
+<!-- Extension pages block inline scripts (MV3 CSP): keep all JS in app.js. -->
 <script>
-const ICON_PALETTE = ["#000000", "#1D2B53", "#7E2553", "#008751", "#AB5236", "#5F574F", "#C2C3C7", "#FFF1E8", "#FF004D", "#FF6C24", "#FFEC27", "#00E436", "#29ADFF", "#291814", "#FF77A8", "#FFCCAA"];
-const ICON_ART = {
-  close: ["00000000", "00000000", "00700700", "00077000", "00077000", "00700700", "00000000", "00000000"],
-  youtubemusic: ["000dddd000", "00d8888d00", "0d887888d0", "d88877888d", "d88877788d", "d88877788d", "d88877888d", "0d887888d0", "00d8888d00", "000dddd000"],
-  google: ["000ddddd00", "00d88888d0", "0d887778d0", "daa77777d0", "daa777777d", "daa77ccccd", "d337777ccd", "0d3377733d", "00d33333d0", "000ddddd00"],
-  duckduckgo: ["000dddd000", "00d9999d00", "0d999999d0", "d99977999d", "d997d7799d", "d99777aa9d", "d99977999d", "0d999999d0", "00d9999d00", "000dddd000"],
-  startpage: ["0dddddddd0", "dd777777dd", "d77111776d", "d71777176d", "d71777176d", "d71777176d", "d77111776d", "d77777716d", "dd666666dd", "0dddddddd0"],
-  reddit: ["000dddd000", "00d9999d00", "0d979999d0", "d99979999d", "d97777779d", "d97977979d", "d97777779d", "0d977779d0", "00d9999d00", "000dddd000"],
-  youtube: ["0dddddddd0", "dd888888dd", "d88878888d", "d88877888d", "d88877788d", "d88877788d", "d88877888d", "d88878888d", "dd888888dd", "0dddddddd0"],
-  wallhaven: ["0dddddddd0", "dd777777dd", "d77777716d", "d77777776d", "d77777176d", "d17771116d", "d11711111d", "d11111111d", "dd666666dd", "0dddddddd0"],
-  bing: ["00dd000000", "0dccd00000", "0dccd00000", "0dccddd000", "0dcccccd00", "0dccddccd0", "0dccddccd0", "0dccddccd0", "0ddccccd00", "00ddddd000"],
-  brave: ["0dddddddd0", "dd999999dd", "d97999979d", "d99777799d", "d99777799d", "d99977999d", "0d999999d0", "00d9999d00", "000d99d000", "0000dd0000"],
-  wikipedia: ["0dddddddd0", "dd777777dd", "d77777776d", "d7d7777d6d", "d7d7777d6d", "d7d7dd7d6d", "d77d77d76d", "d77777776d", "dd666666dd", "0dddddddd0"],
-};
-
-const svgUri = svg => 'data:image/svg+xml,' + encodeURIComponent(svg);
-  function pixelSvg(cells, backdrop = '', size = 8){
-    const byColour = {};
-    for(const [x, y, colour] of cells) (byColour[colour] = byColour[colour] || []).push(`M${x} ${y}h1v1h-1z`);
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges">` + backdrop +
-      Object.entries(byColour).map(([colour, d]) => `<path fill="${colour}" d="${d.join('')}"/>`).join('') + '</svg>';
-  }
-  // Glass pixels: each art pixel is a rounded tile with a bevel and a light-to-dark shade.
-  const GLASS_DEFS = '<defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1">' +
-    '<stop offset="0" stop-color="#fff" stop-opacity=".38"/><stop offset=".5" stop-color="#fff" stop-opacity=".06"/>' +
-    '<stop offset=".52" stop-color="#000" stop-opacity=".02"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient>' +
-    '<g id="o"><rect width="1" height="1" rx=".18" fill="url(#s)"/>' +
-    '<path d="M.08 .841V.225Q.08 .088 .217 .088H.866" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width=".1" stroke-linecap="round" stroke-linejoin="round"/>' +
-    '<path d="M.929 .166V.785Q.929 .922 .793 .922H.141" fill="none" stroke="#000" stroke-opacity=".25" stroke-width=".1" stroke-linecap="round" stroke-linejoin="round"/></g></defs>';
-  function glassSvg(cells, backdrop = '', size = 8, pad = 0){
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${-pad} ${-pad} ${size + 2 * pad} ${size + 2 * pad}">` + GLASS_DEFS + backdrop +
-      cells.map(([x, y, c]) => `<rect x="${x}" y="${y}" width="1" height="1" rx=".18" fill="${c}"/><use href="#o" x="${x}" y="${y}"/>`).join('') + '</svg>';
-  }
-  const iconMemo = {};
-  function iconUri(name, glass = true){
-    const key = glass ? name : name + '@flat';
-    if(iconMemo[key]) return iconMemo[key];
-    const cells = [];
-    ICON_ART[name].forEach((row, y) => [...row].forEach((ch, x) => {
-      const i = parseInt(ch, 16);
-      if(i) cells.push([x, y, ICON_PALETTE[i]]);
-    }));
-    const size = ICON_ART[name].length;
-    return (iconMemo[key] = svgUri(glass ? glassSvg(cells, '', size) : pixelSvg(cells, '', size)));
-  }
-
-  const IDENT_COLOURS = [12, 14, 9, 11, 3, 2, 8, 1].map(i => ICON_PALETTE[i]);
-  function seededRandom(seed){
-    let s = seed >>> 0;
-    return () => {
-      s = (s + 0x6D2B79F5) | 0;
-      let t = Math.imul(s ^ (s >>> 15), 1 | s);
-      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-  }
-  const nameSeed = name => [...name].reduce((h, c) => (h * 31 + c.codePointAt(0)) >>> 0, 7);
-  const newSeed = () => Math.floor(Math.random() * 1e9) + 1;
-  function identiconUri(seed){
-    const rand = seededRandom(seed);
-    let cells, on;
-    do{
-      cells = [];
-      for(let i = 0; i < 18; i++) cells.push(rand() < 0.45);
-      on = cells.filter(Boolean).length;
-    }while(on < 6 || on > 10);
-    const colour = IDENT_COLOURS[Math.floor(rand() * IDENT_COLOURS.length)];
-    const px = [];
-    cells.forEach((filled, i) => {
-      if(!filled) return;
-      const x = i % 3, y = Math.floor(i / 3);
-      px.push([1 + x, 1 + y, colour], [6 - x, 1 + y, colour]);
-    });
-    // outline the dark tile the same way the engine icons are outlined (palette colour 13)
-    const shape = new Set();
-    for(let y = 0; y < 8; y++) for(let x = 0; x < 8; x++){
-      if((x === 0 || x === 7) && (y === 0 || y === 7)) continue;
-      shape.add(x + ',' + y);
-    }
-    const outline = new Set();
-    for(const key of shape){
-      const [x, y] = key.split(',').map(Number);
-      for(const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]){
-        const n = (x + dx) + ',' + (y + dy);
-        if(!shape.has(n)) outline.add(n);
-      }
-    }
-    const toCells = (set, colour) => [...set].map(k => { const [x, y] = k.split(',').map(Number); return [x, y, colour]; });
-    // cream backing tile with a grey shade along the right and bottom, like the Wikipedia icon
-    const ground = toCells(shape, ICON_PALETTE[7]).map(([x, y, c]) => (x === 7 || y === 7) ? [x, y, ICON_PALETTE[6]] : [x, y, c]);
-    const ring = toCells(outline, ICON_PALETTE[13]);
-    return svgUri(glassSvg(ground.concat(px, ring), '', 8, 1));
-  }
-
-  
-for(const n of ['google','bing','duckduckgo','startpage','brave','wikipedia','reddit','wallhaven']){const i=document.createElement('img');i.src=iconUri(n);document.querySelector('#p').appendChild(i)}
+window.chrome={search:{query(){}}};
+(()=>{const RD=Date,base=new RD(2026,9,14,10,9,0);class FD extends RD{constructor(...a){a.length?super(...a):super(base.getTime())}static now(){return base.getTime()}}window.Date=FD})();
 </script>
+<script src="../app.js"></script>
+<script>
+document.getElementById("wallpaper-btn").click();
+["wp-next","wp-remove"].forEach(i=>document.getElementById(i).hidden=false);
+document.getElementById("search").blur();
+</script>
+</body>
+</html>
