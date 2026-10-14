@@ -189,7 +189,10 @@ const ICON_ART = {
     '<g stroke="#000" stroke-width="4.8"><circle cx="11" cy="10.5" r="6.5"/><path d="M16 15.5l4.5 4.5"/></g>' +
     '<g stroke="#fff" stroke-width="2.4"><circle cx="11" cy="10.5" r="6.5"/><path d="M16 15.5l4.5 4.5"/></g></svg>');
 
-  const hasBrowserSearch = ()=> typeof chrome !== 'undefined' && !!chrome.search && typeof chrome.search.query === 'function';
+  // Chrome/Edge: chrome.search.query({text}); Firefox: browser.search.search({query})
+  const searchApi = typeof browser !== 'undefined' && browser.search && typeof browser.search.search === 'function' ? browser.search
+    : typeof chrome !== 'undefined' && chrome.search && typeof chrome.search.query === 'function' ? chrome.search : null;
+  const hasBrowserSearch = ()=> !!searchApi;
   const searchUrl = (template, q)=> template.replace('%s', ()=> encodeURIComponent(q));
 
   function isValidTemplate(url){
@@ -361,7 +364,8 @@ const ICON_ART = {
     if(engine.key !== 'default'){ location.href = searchUrl(engine.url, q); return; }
     const goGoogle = ()=>{ location.href = searchUrl(ENGINES.google.url, q); };
     try{
-      const result = chrome.search.query({text: q, disposition: 'CURRENT_TAB'});
+      const result = searchApi.query ? searchApi.query({text: q, disposition: 'CURRENT_TAB'})
+        : searchApi.search({query: q, disposition: 'CURRENT_TAB'});
       if(result && typeof result.catch === 'function') result.catch(goGoogle);
     }catch{ goGoogle(); }
   }
