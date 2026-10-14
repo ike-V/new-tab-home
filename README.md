@@ -32,6 +32,7 @@ WALLPAPERS
 SEARCH  
 • Uses your browser's default search engine (extension installs only; the `file://` install uses Google)  
 • Or pick another: Google, Bing, DuckDuckGo, Brave Search, or Startpage, (also Wikipedia, Reddit, YouTube, YouTube Music, or Wallhaven)  
+• The icons are small pixel-art sprites made in PICO-8 and built into the extension, so the sites' favicons don't need to be fetched from the internet  
 • Add your own search engines with a URL template (put %s where the search goes)  
 • Type a web address and press Enter to go straight there  
 • Press / anywhere on the page to jump to the search bar
