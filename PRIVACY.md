@@ -1,6 +1,6 @@
 # Privacy Policy: New Tab Home ~/
 
-Last updated: 2026-10-12
+Last updated: 2026-10-14
 
 New Tab Home ~/ replaces your browser's New Tab page with a clock, a search box, and a
 wallpaper from your own images. It has no accounts, servers, analytics, or advertising.
@@ -36,15 +36,15 @@ policy.
 
 ## Permissions
 
-- `search`: runs your searches with your browser's default search engine. Used for
-  nothing else.
+- `search`: runs your searches with your browser's default search engine (Chrome and
+  Edge `search.query`, Firefox `search.search`). Used for nothing else.
 - New Tab override: replaces the New Tab page with this extension's page.
 - Folder access: requested by your browser at the time you choose a wallpaper folder.
   Read-only.
 
-## Chrome Web Store user data policy
+## Store user data policies
 
-The extension does not sell or transfer user data to third parties; does not use or
+For the Chrome Web Store, Microsoft Edge Add-ons and Firefox Add-ons: the extension does not sell or transfer user data to third parties; does not use or
 transfer user data for purposes unrelated to its single purpose (a customizable New Tab
 page); and does not use or transfer user data to determine creditworthiness or for
 lending purposes.

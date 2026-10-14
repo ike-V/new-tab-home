@@ -39,26 +39,27 @@ SEARCH
 PRIVACY  
 Your images are read in your browser and never uploaded. The extension has no server, no analytics, and no remote code. Searches go straight to the engine you choose. It makes no network requests of its own. It asks for one permission, "search", so it can use your browser's default search engine. Full policy: https://github.com/ike-V/new-tab-home/blob/main/PRIVACY.md
 
-Works in Chromium-based browsers such as Chrome, Edge and Brave.
+Works in Chrome, Edge, Brave and other Chromium browsers, and in Firefox 140 or newer (Firefox has no folder picking: add images instead).
 
 Source: https://github.com/ike-V/new-tab-home  
-Install: [Chrome Web Store](https://chromewebstore.google.com/detail/new-tab/milkcimjhceibipjhmcobjahhhkmjehc), or see [Setup](#setup) below to load it manually.
+Install: [Chrome Web Store](https://chromewebstore.google.com/detail/new-tab/milkcimjhceibipjhmcobjahhhkmjehc), or see [Setup](#setup) below to load it manually (Chromium browsers and Firefox).
 
 ## Screenshots
 
-![Clock, date, and search bar over a green wallpaper, with the wallpaper menu open: add images, show another, remove](screenshots/full-page.png)
+![Clock, date, and search bar over a green marbled wallpaper, with the wallpaper buttons open: settings, add images, show another, remove](screenshots/full-page.png)
 
-![Search engine dropdown open, showing Google, Bing, DuckDuckGo, Brave Search, Startpage, Wikipedia, Reddit, YouTube, and YouTube Music](screenshots/engine-picker.png)
+![Search engine menu open, showing Browser default, Google, Bing, DuckDuckGo, Startpage, Brave, Wikipedia, Reddit and Wallhaven with pixel-art icons](screenshots/engine-picker.png)
 
 ## Requirements
 
-- Any Chromium-based browser (Chrome, Edge, Brave, Helium, etc.), or Titanium on
-  Android — see **Setup** below for how to install it.
+- Any Chromium-based browser (Chrome, Edge, Brave, Helium, etc.), Firefox 140 or newer, or
+  Titanium on Android — see **Setup** below for how to install it.
 - For the wallpaper folder feature specifically: a browser that supports the
   [File System Access API](https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API)
   (`showDirectoryPicker`). This is Chromium-only, and some Chromium browsers disable it
-  by default even though the code is present — Brave is a known example. If it's
-  unavailable, the page falls back to drag-and-drop (see below).
+  by default even though the code is present — Brave is a known example. Firefox and
+  Safari don't have it. If it's unavailable, the page falls back to adding images
+  directly (see below).
 
 ## Setup
 
@@ -106,6 +107,13 @@ Helium itself is available for macOS, Windows, and Linux from
    work.
 3. Go to `helium://settings/onStartup` and choose **Open the New Tab Page**.
 4. Open a new tab (⌘T on macOS, Ctrl+T on Windows/Linux) to confirm it loads.
+
+### Option C: Firefox (temporary load)
+
+1. Run `python3 store-assets/build_zip.py`. It writes `store-assets/new-tab-home-firefox.zip`.
+2. In Firefox, open `about:debugging#/runtime/this-firefox`, click **Load Temporary
+   Add-on…** and pick that ZIP.
+3. Open a new tab. Temporary add-ons are removed when Firefox quits.
 
 ### Android (Titanium)
 
@@ -159,6 +167,10 @@ you want to change something:
   controls how many recently-shown images are excluded before one can repeat.
   Raise it for less repetition (needs a bigger photo folder to feel natural), lower it
   if you'd rather see more repeats.
+- **Packaging**: `python3 store-assets/build_zip.py` writes `store-assets/new-tab-home.zip`
+  (Chrome Web Store and Edge Add-ons) and `store-assets/new-tab-home-firefox.zip`
+  (Firefox Add-ons: adds the add-on ID and data-collection declaration). Bump `version`
+  in `manifest.json` first. Store listing text is in `store-assets/store-listing.md`.
 
 ## Privacy
 
@@ -177,6 +189,8 @@ the browser's default search engine. Full policy: [PRIVACY.md](PRIVACY.md).
 
 - With Option B (`file://`), folder access is one-time only and must be re-granted
   after each full browser quit. Option A avoids this.
+- Firefox has no folder picking (add images from the ⚙ menu or by dragging them in), and
+  Safari isn't supported (it has neither the search API nor folder picking).
 - Live search-as-you-type suggestions aren't implemented. Most search engines don't
   expose a suggestion endpoint that's reachable from a plain webpage (no CORS support),
   so this was left out rather than half-implemented for only 2-3 engines.
