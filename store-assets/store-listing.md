@@ -15,7 +15,9 @@ Source: https://github.com/ike-V/new-tab-home · Issues: https://github.com/ike-
 **Description:**
 
 ```
-A new tab that is truly yours.
+· NO ACCOUNTS · NO TRACKING · NO ADS
+· NO SERVERS · NO NETWORK REQUESTS
+· NO ACCESS TO TABS, HISTORY, DOWNLOADS OR COOKIES
 
 Got a folder full of wallpapers you never see?
 Now you will, every time you open a new tab.
@@ -23,25 +25,15 @@ Now you will, every time you open a new tab.
 
 Your images never leave your computer.
 
- -No accounts, no tracking, no ads-
-
 WALLPAPERS
 • Choose a folder once. Every new tab / refresh shows a different image
-
 • Recently shown images are skipped, so you don't see the same few over and over
-
 • Choose "Allow on every visit" and the folder stays available after you restart your browser
-
 • The gear button opens a small menu: add images, refresh, remove the current wallpaper image, or hide the clock and the search bar to see your whole picture
-
 • Drag image files onto the page to add them to the rotation
-
 • Remove only deletes the copy the extension holds, never your original files. Images from your folder can't be removed this way; delete the file from the folder instead
-
 • No folder access? Some browsers turn it off, and touch devices work differently. Add images directly instead
-
 • Works with common image file types
-
 
 SEARCH
 • Uses your browser's default search engine
@@ -112,13 +104,13 @@ A new tab that is truly yours: a clock, a search bar, and a wallpaper picked at 
 **Description:**
 
 ```
-A new tab that is truly yours.
+· NO ACCOUNTS · NO TRACKING · NO ADS
+· NO SERVERS · NO NETWORK REQUESTS
+· NO ACCESS TO TABS, HISTORY, DOWNLOADS OR COOKIES
 
 "New Tab Home ~/" (~/ short for Home folder) replaces your new tab page with a clock, a search bar, and a wallpaper picked at random from your own images.
 
 Your images never leave your computer.
-
-No accounts, no tracking, no ads.
 
 WALLPAPERS
 • Add images from the gear menu, or drag image files onto the page. Every new tab shows a different one
