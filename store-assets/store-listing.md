@@ -32,7 +32,7 @@ WALLPAPERS
 
 • Choose "Allow on every visit" and the folder stays available after you restart your browser
 
-• The gear button opens a small menu: add images, refresh, or remove the current wallpaper image
+• The gear button opens a small menu: add images, refresh, remove the current wallpaper image, or hide the clock and the search bar to see your whole picture
 
 • Drag image files onto the page to add them to the rotation
 
@@ -51,8 +51,17 @@ SEARCH
 • Type a web address and press Enter to go straight there
 • Press / anywhere on the page to jump to the search bar
 
-PRIVACY
-Your images are read in your browser and never uploaded. The extension has no server, no analytics, and no remote code. Searches go straight to the engine you choose. It makes no network requests of its own. It asks for one permission, "search", so it can use your browser's default search engine. Full policy: https://github.com/ike-V/new-tab-home/blob/main/PRIVACY.md
+PRIVACY AND PERMISSIONS
+• One permission: "search", used only to run your search through your browser's default search engine
+• It does not ask to read or change any website, and it cannot see your tabs, history, bookmarks, downloads or cookies
+• No account, no login, no server, no analytics, no ads. Nothing is synced
+• No remote code. Everything it runs is inside the package, as plain readable code
+• It makes no network requests of its own
+• Your images are read in your browser and never uploaded. A wallpaper folder is opened read-only, and only after you choose it
+• Your settings stay in your browser on this computer and are removed when you uninstall
+• A search goes straight from your browser to the engine you picked, the same as typing it in the address bar
+
+Full policy: https://github.com/ike-V/new-tab-home/blob/main/PRIVACY.md
 
 Works in Chromium-based browsers such as Chrome, Edge and Brave.
 
@@ -85,7 +94,7 @@ Made for Microsoft Edge. Also works in other Chromium-based browsers such as Chr
 **Notes for certification:**
 
 ```
-No account or login is needed. Open a new tab to see the extension. The gear button (top right) opens the wallpaper buttons: add images (or drag image files onto the page), show another, remove. The icon at the right of the search bar picks the search engine. The only permission, "search", runs searches with the browser's default search engine. The extension makes no network requests of its own and has no remote code.
+No account or login is needed. Open a new tab to see the extension. The gear button (top right) opens the wallpaper buttons: add images (or drag image files onto the page), show another, remove, and hide or show the clock and the search bar. The icon at the right of the search bar picks the search engine. The only permission, "search", runs searches with the browser's default search engine. The extension makes no network requests of its own and has no remote code.
 ```
 
 ## Firefox Add-ons (AMO)
@@ -116,6 +125,7 @@ WALLPAPERS
 • Recently shown images are skipped, so you don't see the same few over and over
 • Refresh to see another, or remove the current one. Remove only deletes the copy the extension holds, never your original files
 • Works with common image file types
+• Hide the clock, the search bar, or both from the gear menu to see your whole picture
 • Firefox doesn't offer folder picking, so wallpapers are added as images
 
 SEARCH
@@ -126,8 +136,15 @@ SEARCH
 • Type a web address and press Enter to go straight there
 • Press / anywhere on the page to jump to the search bar
 
-PRIVACY
-Your images are read in your browser and never uploaded. The extension has no server, no analytics, and no remote code. Searches go straight to the engine you choose. It makes no network requests of its own. It asks for one permission, "search", so it can use your browser's default search engine.
+PRIVACY AND PERMISSIONS
+• One permission: "search", used only to run your search through your browser's default search engine
+• It does not ask to read or change any website, and it cannot see your tabs, history, bookmarks, downloads or cookies
+• No account, no login, no server, no analytics, no ads. Nothing is synced
+• No remote code. Everything it runs is inside the package, as plain readable code
+• It makes no network requests of its own
+• Your images are read in your browser and never uploaded. Images you add are copied into the extension's own storage on this computer
+• Your settings stay in your browser on this computer and are removed when you uninstall
+• A search goes straight from your browser to the engine you picked, the same as typing it in the address bar
 
 Source code: https://github.com/ike-V/new-tab-home
 ```
@@ -141,7 +158,7 @@ First Firefox release. Pixel-art search engine icons, a glass-and-outline look, 
 **Notes to reviewer:**
 
 ```
-No build step: the package is the plain source (manifest.json, index.html, app.js, icons). app.js is not minified. The "search" permission is used only for browser.search.search with disposition CURRENT_TAB when the user picks "Browser default". Wallpaper images stay in the extension's IndexedDB; nothing is sent anywhere, and there are no network requests. data_collection_permissions is "none". To test: open a new tab; the gear (top right) adds images; the icon at the right of the search bar picks the engine.
+No build step: the package is the plain source (manifest.json, index.html, app.js, icons). app.js is not minified. The "search" permission is used only for browser.search.search with disposition CURRENT_TAB when the user picks "Browser default". Wallpaper images stay in the extension's IndexedDB; nothing is sent anywhere, and there are no network requests. data_collection_permissions is "none". To test: open a new tab; the gear (top right) adds images and hides or shows the clock and search bar; the icon at the right of the search bar picks the engine.
 ```
 
 ## Submission checklist

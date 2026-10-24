@@ -704,6 +704,26 @@ const ICON_ART = {
   /* ----- note button ----- */
   noteAction.addEventListener('click', chooseWallpaper);
 
+  /* ---------- show or hide clock and search bar ---------- */
+  const wpClock = document.getElementById('wp-clock');
+  const wpSearch = document.getElementById('wp-search');
+  /* ----- apply saved clock and search bar choice ----- */
+  function applyVisibility(){
+    const hideClock = lsGet('hideClock') === '1', hideSearch = lsGet('hideSearch') === '1';
+    document.body.classList.toggle('hide-clock', hideClock);
+    document.body.classList.toggle('hide-search', hideSearch);
+    wpClock.classList.toggle('off', hideClock);
+    wpSearch.classList.toggle('off', hideSearch);
+    wpClock.title = wpClock.ariaLabel = hideClock ? 'Show clock' : 'Hide clock';
+    wpSearch.title = wpSearch.ariaLabel = hideSearch ? 'Show search bar' : 'Hide search bar';
+    if(hideSearch) closeEngineMenu();
+  }
+  /* ----- clock button ----- */
+  wpClock.addEventListener('click', ()=>{ lsSet('hideClock', lsGet('hideClock') === '1' ? '' : '1'); applyVisibility(); });
+  /* ----- search bar button ----- */
+  wpSearch.addEventListener('click', ()=>{ lsSet('hideSearch', lsGet('hideSearch') === '1' ? '' : '1'); applyVisibility(); });
+  applyVisibility();
+
   /* ---------- drag & drop fallback ---------- */
   const dropHint = document.getElementById('drop-hint');
   let dragCounter = 0;

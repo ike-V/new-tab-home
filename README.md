@@ -18,7 +18,7 @@ WALLPAPERS
 
 • Choose "Allow on every visit" and the folder stays available after you restart your browser
 
-• The gear button opens a small menu: add images, refresh, or remove the current wallpaper image
+• The gear button opens a small menu: add images, refresh, remove the current wallpaper image, or hide the clock and the search bar to see your whole picture
 
 • Drag image files onto the page to add them to the rotation
 
@@ -37,8 +37,16 @@ SEARCH
 • Type a web address and press Enter to go straight there  
 • Press / anywhere on the page to jump to the search bar
 
-PRIVACY  
-Your images are read in your browser and never uploaded. The extension has no server, no analytics, and no remote code. Searches go straight to the engine you choose. It makes no network requests of its own. It asks for one permission, "search", so it can use your browser's default search engine. Full policy: https://github.com/ike-V/new-tab-home/blob/main/PRIVACY.md
+PRIVACY AND PERMISSIONS  
+• One permission: "search", used only to run your search through your browser's default search engine  
+• It does not ask to read or change any website, and it cannot see your tabs, history, bookmarks, downloads or cookies  
+• No account, no login, no server, no analytics, no ads. Nothing is synced  
+• No remote code. Everything it runs is inside the package, as plain readable code  
+• It makes no network requests of its own  
+• Your images are read in your browser and never uploaded. A wallpaper folder is opened read-only, and only after you choose it  
+• Your settings stay in your browser on this computer and are removed when you uninstall  
+• A search goes straight from your browser to the engine you picked, the same as typing it in the address bar  
+Full policy: https://github.com/ike-V/new-tab-home/blob/main/PRIVACY.md
 
 Works in Chrome, Edge, Brave and other Chromium browsers, and in Firefox 140 or newer (Firefox has no folder picking: add images instead).
 
@@ -149,6 +157,7 @@ only.
   your own: a name and a URL with `%s` where the search term goes, such as
   `https://example.com/search?q=%s`. Remove a custom engine with its ×. The `file://`
   install (Option B) can't reach the browser default, so it defaults to Google.
+- **Hide the clock or search bar**: the last two buttons in the ⚙ menu hide or show the clock and date, and the search bar, so the picture is all you see. A struck-through icon means that part is hidden. Your choice is remembered.
 - **Keyboard shortcut**: press `/` anywhere on the page to jump into the search box.
 
 ## Customizing
@@ -183,8 +192,27 @@ transmitted, with the obvious exception of actually submitting a search, which s
 that query to whichever engine you picked, the same as typing it directly into your
 browser's address bar would.
 
-The extension requests one permission, `search`, used only to run your searches through
-the browser's default search engine. Full policy: [PRIVACY.md](PRIVACY.md).
+### What it asks for, and what it doesn't
+
+| | |
+|---|---|
+| **Permissions** | One: `search`, used only to run your searches through the browser's default search engine. It is the only entry under `permissions` in `manifest.json`. |
+| **Website access** | None. No host permissions and no content scripts, so it cannot read or change the pages you visit. |
+| **Browser data** | No access to your tabs, history, bookmarks, downloads or cookies. |
+| **Background activity** | None. No background page or service worker; it runs only while a new tab is open. |
+| **Accounts and servers** | None. Nothing to sign in to, and nothing is synced. |
+| **Network** | No requests of its own. |
+| **Remote code** | None. All code is in the package, in plain readable files (nothing is minified). |
+| **Stored on your computer** | Images you add, the wallpaper folder you picked, your search engine choices, and whether you hid the clock or search bar. Uninstalling the extension removes it. |
+
+### Check it yourself
+
+- Open [`manifest.json`](manifest.json) and read the `permissions` list.
+- On a new tab, open the browser's developer tools and watch the Network panel while you
+  reload: the page, script and icons load from the extension itself and nothing else.
+- Read the source: `index.html` and `app.js` are the whole extension.
+
+The `search` permission is used only to run your searches. Full policy: [PRIVACY.md](PRIVACY.md).
 
 ## Known limitations
 
