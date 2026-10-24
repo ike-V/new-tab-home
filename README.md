@@ -2,36 +2,29 @@
 
 A new tab that is truly yours.
 
-Got a folder full of wallpapers you never see?  
-Now you will, every time you open a tab.  
-"New Tab Home ~/" (`~/` short for home folder) replaces your new tab page with a clock, a search bar, and a wallpaper picked at random from a folder of your own images.
+· NO ACCOUNTS · NO TRACKING · NO ADS  
+· NO SERVERS · NO NETWORK REQUESTS  
+· NO ACCESS TO TABS, HISTORY, DOWNLOADS OR COOKIES
 
+Got a folder full of wallpapers you never see?  
+Now you will, every time you open a new tab.  
+"New Tab Home ~/" (`~/` short for Home folder) replaces your new tab page with a clock, a search bar, and a wallpaper picked at random from a folder of your own images.
 
 Your images never leave your computer.
 
- -No accounts, no tracking, no ads-
-
 WALLPAPERS  
-• Choose a folder once. Every new tab / refresh shows a different image
-
-• Recently shown images are skipped, so you don't see the same few over and over
-
-• Choose "Allow on every visit" and the folder stays available after you restart your browser
-
-• The gear button opens a small menu: add images, refresh, remove the current wallpaper image, or hide the clock and the search bar to see your whole picture
-
-• Drag image files onto the page to add them to the rotation
-
-• Remove only deletes the copy the extension holds, never your original files. Images from your folder can't be removed this way; delete the file from the folder instead
-
-• No folder access? Some browsers turn it off, and touch devices work differently. Add images directly instead
-
-• Works with JPG, PNG, WebP, GIF, AVIF, BMP and SVG
-
+• Choose a folder once. Every new tab / refresh shows a different image  
+• Recently shown images are skipped, so you don't see the same few over and over  
+• Choose "Allow on every visit" and the folder stays available after you restart your browser  
+• The gear button opens a small menu: add images, refresh, remove the current wallpaper image, or hide the clock and the search bar to see your whole picture  
+• Drag image files onto the page to add them to the rotation  
+• Remove only deletes the copy the extension holds, never your original files. Images from your folder can't be removed this way; delete the file from the folder instead  
+• No folder access? Some browsers turn it off, and touch devices work differently. Add images directly instead  
+• Works with common image file types (JPG, PNG, WebP, GIF, AVIF, BMP and SVG)
 
 SEARCH  
 • Uses your browser's default search engine (extension installs only; the `file://` install uses Google)  
-• Or pick another: Google, Bing, DuckDuckGo, Brave Search, or Startpage, (also Wikipedia, Reddit, YouTube, YouTube Music, or Wallhaven)  
+• Or pick another built-in engine, each with its own pixel-art icon: Google, Bing, DuckDuckGo, Startpage, Brave, Wikipedia, Reddit, Wallhaven, YouTube or YouTube Music  
 • The icons are small pixel-art sprites made in PICO-8 and built into the extension, so the sites' favicons don't need to be fetched from the internet  
 • Add your own search engines with a URL template (put %s where the search goes)  
 • Type a web address and press Enter to go straight there  

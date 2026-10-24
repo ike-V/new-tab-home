@@ -4,7 +4,7 @@ Build both ZIPs first: `python3 store-assets/build_zip.py`
 - `new-tab-home.zip`: Chrome Web Store and Edge Add-ons
 - `new-tab-home-firefox.zip`: Firefox Add-ons
 
-Shared assets: icon `icons/icon128.png`; screenshots `screenshots/screenshot-store-1..4-*.png` (1280×800, local; #4 is `store-assets/icons-names-1280x800.png`); Edge logo `store-assets/store-logo-300x300.png`; promo tiles `store-assets/promo-tile-440x280.png`, `store-assets/marquee-tile-1400x560.png` (sources: `promo-tile.html`, `marquee-tile.html`).
+Shared assets: icon `icons/icon128.png` (in this repo). Everything else lives outside the repo in `~/Projects/NTH-Assets/`: screenshots `screenshots/screenshot-store-1..4-*.png` (1280×800; #4 is `store/icons-names-1280x800.png`), Edge logo `store/store-logo-300x300.png`, small promo tile `store/promo-tile-440x280.png`, marquee `store/marquee-tile-1400x560.png` (sources: the `.html` files next to them).
 Privacy policy URL (must be on `main`): https://github.com/ike-V/new-tab-home/blob/main/PRIVACY.md
 Source: https://github.com/ike-V/new-tab-home · Issues: https://github.com/ike-V/new-tab-home/issues
 
@@ -95,10 +95,10 @@ addons.mozilla.org ▸ Developer Hub ▸ Submit a New Add-on ▸ On this site �
 
 **Name:** New Tab Home ~/ · **Categories:** Tabs, Appearance · **License:** All Rights Reserved · **Privacy policy:** URL above · **Support site / email:** GitHub issues URL
 
-**Summary** (78/250, same as the manifest description):
+**Summary** (104/250, the manifest description plus the two privacy words):
 
 ```
-A new tab that is truly yours: your own wallpapers, a clock, and a search bar.
+A new tab that is truly yours: your own wallpapers, a clock, and a search bar. No accounts, no tracking.
 ```
 
 **Description:**
@@ -158,7 +158,13 @@ Source code: https://github.com/ike-V/new-tab-home
 **Release notes:**
 
 ```
-First Firefox release. Pixel-art search engine icons, a glass-and-outline look, a rounded clock, and a search bar that names the active engine.
+First release on Firefox (version 1.0.3).
+
+• Your own wallpapers on every new tab: add images from the gear menu, or drag them onto the page
+• Two buttons in the gear menu hide or show the clock and the search bar, so you can see your whole picture
+• Search with your browser's default engine or pick another one. Each built-in engine has its own pixel-art icon, and you can add your own
+• Optional: use it for the Home button too. The steps are at the end of the description
+• One permission ("search"), no accounts, no tracking, and no network requests of its own
 ```
 
 **Notes to reviewer:**
