@@ -44,7 +44,7 @@ Full policy: https://github.com/ike-V/new-tab-home/blob/main/PRIVACY.md
 Works in Chrome, Edge, Brave and other Chromium browsers, and in Firefox 140 or newer (Firefox has no folder picking: add images instead).
 
 Source: https://github.com/ike-V/new-tab-home  
-Install: [Chrome Web Store](https://chromewebstore.google.com/detail/new-tab/milkcimjhceibipjhmcobjahhhkmjehc), or see [Setup](#setup) below to load it manually (Chromium browsers and Firefox).
+Install: [Chrome Web Store](https://chromewebstore.google.com/detail/new-tab/milkcimjhceibipjhmcobjahhhkmjehc) or [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/new-tab-home/), or see [Setup](#setup) below to load it manually (Chromium browsers and Firefox).
 
 ## Screenshots
 
