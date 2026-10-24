@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "New Tab Home ~/",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv/OeH2DA/cagdijuPM+k5zpshB+pysrsiAO9DTDy9mtNA1xQQAdD+70/8us6sXbabxjkpLKFOht9xWaOBTd59iN94jGzCTf4lX6N0dRxzuobLACygW/3QihF977TTgHSdGal+q5mHhwHPE+Tz3qVmO1y0IdN0SA4Lh3560yaKxpONk6WRqbcyNSlyjD4maGT6EG9XHpDe5UzPPLHMTbNJmWcL5B5buBxEOHrJDQvtrzpnndmTBic4/uGmXPvzfcHR9g2IR2lhAzGztVGPVgsTgQWjlQ7d+Ix8jDwNDwIifYgRZ5PThBOtiEd1hysR1uQJmEJsrYsFm3D4K1V0r+uvQIDAQAB",
   "description": "A new tab that is truly yours: your own wallpapers, a clock, and a search bar.",
   "permissions": ["search"],
