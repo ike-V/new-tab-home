@@ -128,6 +128,24 @@ Helium itself is available for macOS, Windows, and Linux from
    Add-on…** and pick that ZIP.
 3. Open a new tab. Temporary add-ons are removed when Firefox quits.
 
+### Firefox: use it as your Home page
+
+Firefox replaces the new tab page for you, but its Homepage menu has no entry for
+extensions. It does accept the extension's own address, which gives you the same page on
+the Home button and in new windows:
+
+1. Open `about:debugging#/runtime/this-firefox`, find **New Tab Home ~/**, and copy its
+   **Internal UUID**.
+2. Open Settings, then **Home and startup**. Under **Homepage and new windows**, choose
+   **Custom URLs…**.
+3. Enter `moz-extension://<Internal UUID>/index.html` (with your UUID in place of
+   `<Internal UUID>`) and click **Add address**.
+4. The entry shows as **Extension (New Tab Home ~/)**. The Home button and new windows
+   now open the extension.
+
+The UUID belongs to your Firefox profile, so there's no ready-made address to copy. If you
+remove and reinstall the extension, check that it is still the same.
+
 ### Android (Titanium)
 
 Chrome for Android can't run extensions;
@@ -162,6 +180,7 @@ only.
   `https://example.com/search?q=%s`. Remove a custom engine with its ×. The `file://`
   install (Option B) can't reach the browser default, so it defaults to Google.
 - **Hide the clock or search bar**: the last two buttons in the ⚙ menu hide or show the clock and date, and the search bar, so the picture is all you see. A struck-through icon means that part is hidden. Your choice is remembered.
+- **Firefox Home button**: see [Firefox: use it as your Home page](#firefox-use-it-as-your-home-page).
 - **Keyboard shortcut**: press `/` anywhere on the page to jump into the search box.
 
 ## Customizing

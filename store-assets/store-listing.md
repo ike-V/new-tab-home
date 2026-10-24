@@ -95,10 +95,10 @@ addons.mozilla.org ▸ Developer Hub ▸ Submit a New Add-on ▸ On this site �
 
 **Name:** New Tab Home ~/ · **Categories:** Tabs, Appearance · **License:** All Rights Reserved · **Privacy policy:** URL above · **Support site / email:** GitHub issues URL
 
-**Summary** (170/250):
+**Summary** (78/250, same as the manifest description):
 
 ```
-A new tab that is truly yours: a clock, a search bar, and a wallpaper picked at random from your own images. No accounts, no tracking, and no network requests of its own.
+A new tab that is truly yours: your own wallpapers, a clock, and a search bar.
 ```
 
 **Description:**
@@ -108,16 +108,18 @@ A new tab that is truly yours: a clock, a search bar, and a wallpaper picked at 
 · NO SERVERS · NO NETWORK REQUESTS
 · NO ACCESS TO TABS, HISTORY, DOWNLOADS OR COOKIES
 
+Got a folder full of wallpapers you never see?
+Select them all once, and you'll see them every time you open a new tab.
 "New Tab Home ~/" (~/ short for Home folder) replaces your new tab page with a clock, a search bar, and a wallpaper picked at random from your own images.
 
 Your images never leave your computer.
 
 WALLPAPERS
-• Add images from the gear menu, or drag image files onto the page. Every new tab shows a different one
-• Recently shown images are skipped, so you don't see the same few over and over
-• Refresh to see another, or remove the current one. Remove only deletes the copy the extension holds, never your original files
+• Add images from the gear menu: select as many as you like at once, a whole folder's worth if you want. You can also drag image files onto the page
+• Every new tab shows a different one, and recently shown images are skipped so you don't see the same few over and over
+• The gear menu can also refresh to another image, remove the current one, or hide the clock and the search bar to see your whole picture
+• Remove only deletes the copy the extension holds, never your original files
 • Works with common image file types
-• Hide the clock, the search bar, or both from the gear menu to see your whole picture
 • Firefox doesn't offer folder picking, so wallpapers are added as images
 
 SEARCH
@@ -128,6 +130,14 @@ SEARCH
 • Type a web address and press Enter to go straight there
 • Press / anywhere on the page to jump to the search bar
 
+USE IT AS YOUR HOME PAGE TOO (OPTIONAL)
+Firefox's Homepage menu has no entry for extensions, but it accepts the extension's own address:
+1. Open about:debugging#/runtime/this-firefox, find New Tab Home ~/, and copy its Internal UUID
+2. Open Settings, then Home and startup. Under Homepage and new windows, choose Custom URLs
+3. Enter moz-extension://YOUR-UUID/index.html, with your Internal UUID in place of YOUR-UUID, and click Add address
+4. The Home button and new windows now open the extension
+The UUID belongs to your Firefox profile, so it is different on every computer.
+
 PRIVACY AND PERMISSIONS
 • One permission: "search", used only to run your search through your browser's default search engine
 • It does not ask to read or change any website, and it cannot see your tabs, history, bookmarks, downloads or cookies
@@ -137,6 +147,10 @@ PRIVACY AND PERMISSIONS
 • Your images are read in your browser and never uploaded. Images you add are copied into the extension's own storage on this computer
 • Your settings stay in your browser on this computer and are removed when you uninstall
 • A search goes straight from your browser to the engine you picked, the same as typing it in the address bar
+
+Works in Firefox 140 or newer on desktop. Firefox for Android doesn't allow custom new tab pages.
+
+Full policy: https://github.com/ike-V/new-tab-home/blob/main/PRIVACY.md
 
 Source code: https://github.com/ike-V/new-tab-home
 ```
