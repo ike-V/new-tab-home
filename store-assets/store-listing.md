@@ -91,7 +91,7 @@ No account or login is needed. Open a new tab to see the extension. The gear but
 
 ## Firefox Add-ons (AMO)
 
-addons.mozilla.org ▸ Developer Hub ▸ Submit a New Add-on ▸ On this site ▸ upload `new-tab-home-firefox.zip`.
+addons.mozilla.org ▸ Developer Hub ▸ New Tab Home ~/ ▸ Upload New Version ▸ upload `new-tab-home-firefox.zip`. (A first submission is Submit a New Add-on ▸ On this site.)
 
 **Name:** New Tab Home ~/ · **Categories:** Tabs, Appearance · **License:** All Rights Reserved · **Privacy policy:** URL above · **Support site / email:** GitHub issues URL
 
@@ -158,19 +158,23 @@ Source code: https://github.com/ike-V/new-tab-home
 **Release notes:**
 
 ```
-First release on Firefox (version 1.0.3).
+Version 1.0.3
 
-• Your own wallpapers on every new tab: add images from the gear menu, or drag them onto the page
-• Two buttons in the gear menu hide or show the clock and the search bar, so you can see your whole picture
-• Search with your browser's default engine or pick another one. Each built-in engine has its own pixel-art icon, and you can add your own
+• New: two buttons in the gear menu hide or show the clock and the search bar, so you can see your whole picture. Your choice is remembered
+• The magnifier, gear and wallpaper buttons now use the same dark glass as the search bar
 • Optional: use it for the Home button too. The steps are at the end of the description
-• One permission ("search"), no accounts, no tracking, and no network requests of its own
 ```
 
 **Notes to reviewer:**
 
 ```
-No build step: the package is the plain source (manifest.json, index.html, app.js, icons). app.js is not minified. The "search" permission is used only for browser.search.search with disposition CURRENT_TAB when the user picks "Browser default". Wallpaper images stay in the extension's IndexedDB; nothing is sent anywhere, and there are no network requests. data_collection_permissions is "none". To test: open a new tab; the gear (top right) adds images and hides or shows the clock and search bar; the icon at the right of the search bar picks the engine.
+Update from 1.0.2. No build step and no source code upload needed: the package is the plain source (manifest.json, index.html, app.js, icons/*.png), not minified or generated at upload time.
+
+Changes since 1.0.2:
+• Two new buttons in the gear menu (index.html, app.js) hide or show the clock and the search bar. The choice is saved in localStorage ("hideClock" and "hideSearch").
+• The toolbar buttons use the same background colour as the search bar (CSS only).
+• Short label comments were added to app.js and index.html.
+• manifest.json: only the version number changed. No new permissions.
 ```
 
 ## Submission checklist
