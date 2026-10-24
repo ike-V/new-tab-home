@@ -1,10 +1,13 @@
 (function(){
 
   /* ---------- storage helpers (fail gracefully if storage is blocked) ---------- */
+  /* ----- read localStorage ----- */
   function lsGet(key){ try{ return localStorage.getItem(key); }catch{ return null; } }
+  /* ----- write localStorage ----- */
   function lsSet(key,val){ try{ localStorage.setItem(key,val); }catch{} }
 
   const DB_NAME = 'ht-homepage', STORE = 'kv';
+  /* ----- open database ----- */
   function idb(){
     return new Promise((resolve, reject)=>{
       try{
@@ -15,6 +18,7 @@
       }catch(e){ reject(e); }
     });
   }
+  /* ----- read one saved value ----- */
   async function idbGet(key){
     try{
       const db = await idb();
@@ -26,6 +30,7 @@
       });
     }catch(e){ return null; }
   }
+  /* ----- write one saved value ----- */
   async function idbSet(key,val){
     try{
       const db = await idb();
@@ -37,6 +42,7 @@
       });
     }catch(e){ }
   }
+  /* ----- delete one saved value ----- */
   async function idbDelete(key){
     try{
       const db = await idb();
@@ -48,11 +54,13 @@
       });
     }catch(e){ }
   }
+  /* ----- add a value under a new key ----- */
   async function idbAdd(storeKeyPrefix, val){
     const key = storeKeyPrefix + ':' + Date.now() + ':' + Math.random().toString(36).slice(2);
     await idbSet(key, val);
     return key;
   }
+  /* ----- list saved keys by prefix ----- */
   async function idbAllKeysWithPrefix(prefix){
     try{
       const db = await idb();
@@ -68,11 +76,13 @@
   /* ---------- clock ---------- */
   const clockEl = document.getElementById('clock');
   const dateEl = document.getElementById('date');
+  /* ----- update clock and date ----- */
   function tick(){
     const now = new Date();
     clockEl.textContent = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
     dateEl.textContent = now.toLocaleDateString([], {weekday:'long', month:'long', day:'numeric'});
   }
+  /* ----- start the clock ----- */
   tick(); setInterval(tick, 1000*10);
 
   /* ---------- search ---------- */
@@ -105,7 +115,9 @@ const ICON_ART = {
 };
 /* END GENERATED ICONS */
 
+  /* ----- svg text to data link ----- */
   const svgUri = svg => 'data:image/svg+xml,' + encodeURIComponent(svg);
+  /* ----- flat pixel svg ----- */
   function pixelSvg(cells, backdrop = '', size = 8){
     const byColour = {};
     for(const [x, y, colour] of cells) (byColour[colour] = byColour[colour] || []).push(`M${x} ${y}h1v1h-1z`);
@@ -119,11 +131,13 @@ const ICON_ART = {
     '<g id="o"><rect width="1" height="1" rx=".18" fill="url(#s)"/>' +
     '<path d="M.08 .841V.225Q.08 .088 .217 .088H.866" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width=".1" stroke-linecap="round" stroke-linejoin="round"/>' +
     '<path d="M.929 .166V.785Q.929 .922 .793 .922H.141" fill="none" stroke="#000" stroke-opacity=".25" stroke-width=".1" stroke-linecap="round" stroke-linejoin="round"/></g></defs>';
+  /* ----- glass pixel svg ----- */
   function glassSvg(cells, backdrop = '', size = 8, pad = 0){
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${-pad} ${-pad} ${size + 2 * pad} ${size + 2 * pad}">` + GLASS_DEFS + backdrop +
       cells.map(([x, y, c]) => `<rect x="${x}" y="${y}" width="1" height="1" rx=".18" fill="${c}"/><use href="#o" x="${x}" y="${y}"/>`).join('') + '</svg>';
   }
   const iconMemo = {};
+  /* ----- engine icon as data link ----- */
   function iconUri(name, glass = true){
     const key = glass ? name : name + '@flat';
     if(iconMemo[key]) return iconMemo[key];
@@ -137,6 +151,7 @@ const ICON_ART = {
   }
 
   const IDENT_COLOURS = [12, 14, 9, 11, 3, 2, 8, 1].map(i => ICON_PALETTE[i]);
+  /* ----- seeded random numbers ----- */
   function seededRandom(seed){
     let s = seed >>> 0;
     return () => {
@@ -146,8 +161,11 @@ const ICON_ART = {
       return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
   }
+  /* ----- seed from a name ----- */
   const nameSeed = name => [...name].reduce((h, c) => (h * 31 + c.codePointAt(0)) >>> 0, 7);
+  /* ----- new random seed ----- */
   const newSeed = () => Math.floor(Math.random() * 1e9) + 1;
+  /* ----- generated icon for custom engines ----- */
   function identiconUri(seed){
     const rand = seededRandom(seed);
     let cells, on;
@@ -163,7 +181,6 @@ const ICON_ART = {
       const x = i % 3, y = Math.floor(i / 3);
       px.push([1 + x, 1 + y, colour], [6 - x, 1 + y, colour]);
     });
-    // outline the dark tile the same way the engine icons are outlined (palette colour 13)
     const shape = new Set();
     for(let y = 0; y < 8; y++) for(let x = 0; x < 8; x++){
       if((x === 0 || x === 7) && (y === 0 || y === 7)) continue;
@@ -178,7 +195,6 @@ const ICON_ART = {
       }
     }
     const toCells = (set, colour) => [...set].map(k => { const [x, y] = k.split(',').map(Number); return [x, y, colour]; });
-    // cream backing tile with a grey shade along the right and bottom, like the Wikipedia icon
     const ground = toCells(shape, ICON_PALETTE[7]).map(([x, y, c]) => (x === 7 || y === 7) ? [x, y, ICON_PALETTE[6]] : [x, y, c]);
     const ring = toCells(outline, ICON_PALETTE[13]);
     return svgUri(glassSvg(ground.concat(px, ring), '', 8, 1));
@@ -192,9 +208,12 @@ const ICON_ART = {
   // Chrome/Edge: chrome.search.query({text}); Firefox: browser.search.search({query})
   const searchApi = typeof browser !== 'undefined' && browser.search && typeof browser.search.search === 'function' ? browser.search
     : typeof chrome !== 'undefined' && chrome.search && typeof chrome.search.query === 'function' ? chrome.search : null;
+  /* ----- is the browser search API available ----- */
   const hasBrowserSearch = ()=> !!searchApi;
+  /* ----- fill %s in a search URL ----- */
   const searchUrl = (template, q)=> template.replace('%s', ()=> encodeURIComponent(q));
 
+  /* ----- check a custom engine URL ----- */
   function isValidTemplate(url){
     if(typeof url !== 'string' || url.split('%s').length !== 2) return false;
     try{
@@ -202,14 +221,17 @@ const ICON_ART = {
       return u.protocol === 'https:' || u.protocol === 'http:';
     }catch{ return false; }
   }
+  /* ----- load saved custom engines ----- */
   function loadCustomEngines(){
     try{
       const list = JSON.parse(lsGet('customEngines') || '[]');
       return Array.isArray(list) ? list.filter(e => e && e.id && typeof e.name === 'string' && e.name && isValidTemplate(e.url)) : [];
     }catch{ return []; }
   }
+  /* ----- save custom engines ----- */
   function saveCustomEngines(list){ lsSet('customEngines', JSON.stringify(list)); }
 
+  /* ----- all engines in menu order ----- */
   function engineList(){
     const list = [];
     if(hasBrowserSearch()) list.push({key:'default', name:'Browser default', icon:SEARCH_ICON});
@@ -221,8 +243,10 @@ const ICON_ART = {
     }
     return list;
   }
+  /* ----- engine used when none is saved ----- */
   const fallbackEngine = ()=> hasBrowserSearch() ? 'default' : 'google';
   let currentEngine = lsGet('engine');
+  /* ----- currently selected engine ----- */
   const activeEngine = ()=>{
     const list = engineList();
     return list.find(e => e.key === currentEngine) || list.find(e => e.key === fallbackEngine());
@@ -235,10 +259,13 @@ const ICON_ART = {
   const engineToggle = document.getElementById('engine-toggle');
   const engineMenu = document.getElementById('engine-menu');
 
+  /* ----- make an icon image ----- */
   const makeIcon = src => { const img = document.createElement('img'); img.src = src; img.alt = ''; return img; };
+  /* ----- icon image for an engine ----- */
   const engineIcon = e => makeIcon(e.icon);
-  engineToggle.append(makeIcon(SEARCH_ICON));   // the toggle keeps the magnifier; engine icons live in the menu
+  engineToggle.append(makeIcon(SEARCH_ICON));
 
+  /* ----- add-engine button and form ----- */
   const addBtn = document.createElement('button');
   addBtn.type = 'button'; addBtn.className = 'engine-add'; addBtn.textContent = '+ Add search engine';
   const addForm = document.createElement('div');
@@ -254,14 +281,18 @@ const ICON_ART = {
   const formError = addForm.querySelector('.ef-error');
   const preview = addForm.querySelector('.ef-preview');
   let pendingSeed = newSeed();
+  /* ----- show the new icon preview ----- */
   const showPreview = ()=>{ preview.src = identiconUri(pendingSeed); };
+  /* ----- shuffle icon button ----- */
   addForm.querySelector('.ef-shuffle').addEventListener('click', ()=>{ pendingSeed = newSeed(); showPreview(); });
 
+  /* ----- update search placeholder ----- */
   function updateEngineToggle(){
     const e = activeEngine();
     searchInput.placeholder = e.key === 'default' ? 'Search the web…' : 'Search ' + e.name + '…';
     engineToggle.setAttribute('aria-label', 'Search engine: ' + e.name);
   }
+  /* ----- build the engine menu ----- */
   function renderEngineMenu(){
     const rows = engineList().map(e => {
       const row = document.createElement('div');
@@ -284,27 +315,32 @@ const ICON_ART = {
     });
     engineMenu.replaceChildren(...rows, addBtn, addForm);
   }
+  /* ----- pick an engine ----- */
   function selectEngine(key){
     currentEngine = key;
     lsSet('engine', key);
     updateEngineToggle();
     renderEngineMenu();
   }
+  /* ----- delete a custom engine ----- */
   function removeCustomEngine(e){
     saveCustomEngines(loadCustomEngines().filter(x => x.id !== e.id));
     if(currentEngine === e.key) selectEngine(fallbackEngine());
     else renderEngineMenu();
   }
 
+  /* ----- close add-engine form ----- */
   function closeEngineForm(){
     addForm.hidden = true; addBtn.hidden = false;
     nameInput.value = ''; urlInput.value = ''; formError.textContent = '';
   }
+  /* ----- close engine menu ----- */
   function closeEngineMenu(){
     engineMenu.classList.remove('open');
     closeEngineForm();
   }
-  const MENU_EDGE = 12;   // gap kept between the menu and the page edge
+  const MENU_EDGE = 12;
+  /* ----- size and place engine menu ----- */
   function positionEngineMenu(){
     const rect = searchWrap.getBoundingClientRect();
     const below = window.innerHeight - rect.bottom - 8 - MENU_EDGE;
@@ -314,7 +350,9 @@ const ICON_ART = {
     engineMenu.classList.toggle('flip-up', flip);
     engineMenu.style.maxHeight = Math.max(160, Math.floor(flip ? above : below)) + 'px';
   }
+  /* ----- re-place menu on resize ----- */
   window.addEventListener('resize', ()=>{ if(engineMenu.classList.contains('open')) positionEngineMenu(); });
+  /* ----- save a new custom engine ----- */
   function saveEngine(){
     const name = nameInput.value.trim();
     const url = urlInput.value.trim();
@@ -330,17 +368,21 @@ const ICON_ART = {
     closeEngineMenu();
   }
 
+  /* ----- open add-engine form ----- */
   addBtn.addEventListener('click', ()=>{
     pendingSeed = newSeed(); showPreview();
     addBtn.hidden = true; addForm.hidden = false;
     positionEngineMenu();
     nameInput.focus();
   });
+  /* ----- cancel and add buttons ----- */
   addForm.querySelector('.ef-cancel').addEventListener('click', closeEngineForm);
   addForm.querySelector('.ef-save').addEventListener('click', saveEngine);
+  /* ----- Enter key saves engine ----- */
   [nameInput, urlInput].forEach(input => input.addEventListener('keydown', e => {
     if(e.key === 'Enter'){ e.preventDefault(); saveEngine(); }
   }));
+  /* ----- open or close engine menu ----- */
   engineToggle.addEventListener('click', e => {
     e.stopPropagation();
     if(engineMenu.classList.contains('open')){ closeEngineMenu(); return; }
@@ -348,9 +390,11 @@ const ICON_ART = {
     engineMenu.classList.add('open');
     positionEngineMenu();
   });
+  /* ----- click outside closes engine menu ----- */
   document.addEventListener('click', e => {
     if(!e.composedPath().includes(engineMenu)) closeEngineMenu();
   });
+  /* ----- Escape closes menu, / focuses search ----- */
   document.addEventListener('keydown', e => {
     if(e.key === 'Escape'){ closeEngineMenu(); return; }
     if(e.key === '/' && !e.metaKey && !e.ctrlKey && !e.altKey && !/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)){
@@ -359,6 +403,7 @@ const ICON_ART = {
     }
   });
 
+  /* ----- run a search ----- */
   function runSearch(q){
     const engine = activeEngine();
     if(engine.key !== 'default'){ location.href = searchUrl(engine.url, q); return; }
@@ -369,11 +414,11 @@ const ICON_ART = {
       if(result && typeof result.catch === 'function') result.catch(goGoogle);
     }catch{ goGoogle(); }
   }
+  /* ----- search form submit ----- */
   searchForm.addEventListener('submit', e => {
     e.preventDefault();
     const q = searchInput.value.trim();
     if(!q) return;
-    // allow typing a bare URL
     if(/^https?:\/\//i.test(q)){
       location.href = q;
     } else if(/^[\w-]+(\.[\w-]+)+(\/.*)?$/.test(q) && !q.includes(' ')){
@@ -383,6 +428,7 @@ const ICON_ART = {
     }
   });
 
+  /* ----- first draw of menu and placeholder ----- */
   renderEngineMenu();
   updateEngineToggle();
 
@@ -392,6 +438,7 @@ const ICON_ART = {
   const noteText = document.getElementById('note-text');
   const noteAction = document.getElementById('note-action');
   let currentPoolKey = null;
+  /* ----- show bottom-left note ----- */
   function showNote(text, actionLabel){
     noteText.textContent = text;
     noteAction.hidden = !actionLabel;
@@ -403,15 +450,18 @@ const ICON_ART = {
   let dirHandle = null;
   let needsReconnect = false;
 
+  /* ----- set wallpaper image ----- */
   function setBackground(url){
     bgEl.style.backgroundImage = `url("${url}")`;
   }
 
+  /* ----- show last wallpaper at once ----- */
   function showCachedInstantly(){
     const cached = lsGet('lastWallpaperDataUrl');
     if(cached) setBackground(cached);
   }
 
+  /* ----- save wallpaper for next load ----- */
   async function cacheAsDataUrl(blob){
     if(blob.size > 4*1024*1024) return;
     const reader = new FileReader();
@@ -426,11 +476,13 @@ const ICON_ART = {
 
   const RECENT_WALLPAPER_CAP = 20;
 
+  /* ----- remember recent wallpaper ----- */
   function markRecent(key){
     const recent = JSON.parse(lsGet('recentWallpapers') || '[]');
     lsSet('recentWallpapers', JSON.stringify(recent.concat(key).slice(-RECENT_WALLPAPER_CAP)));
   }
 
+  /* ----- random pick, skipping recent ----- */
   function pickAvoidingRecent(items, keyFn){
     const recent = JSON.parse(lsGet('recentWallpapers') || '[]');
     const cap = Math.min(RECENT_WALLPAPER_CAP, items.length - 1);
@@ -441,7 +493,7 @@ const ICON_ART = {
     return chosen;
   }
 
-  // Folder images plus any images added by drop or chooser.
+  /* ----- random wallpaper from folder + images added by drop or chooser ----- */
   async function pickRandomFromDirHandle(handle){
     const items = [];
     for await (const entry of handle.values()){
@@ -461,6 +513,7 @@ const ICON_ART = {
     return true;
   }
 
+  /* ----- show a stored wallpaper ----- */
   async function showPoolImage(key){
     currentPoolKey = null;
     const blob = await idbGet(key);
@@ -473,6 +526,7 @@ const ICON_ART = {
     return true;
   }
 
+  /* ----- random wallpaper from added images ----- */
   async function pickRandomFromDroppedPool(){
     currentPoolKey = null;
     const keys = await idbAllKeysWithPrefix('dropped:');
@@ -480,6 +534,7 @@ const ICON_ART = {
     return showPoolImage(pickAvoidingRecent(keys, k => k));
   }
 
+  /* ----- note when no images are added ----- */
   function showEmptyPoolNote(){
     showNote(
       matchMedia('(pointer: coarse)').matches
@@ -488,8 +543,10 @@ const ICON_ART = {
       'Choose images');
   }
 
+  /* ----- show another wallpaper ----- */
   const showAnother = ()=> usingFolder() ? pickRandomFromDirHandle(dirHandle) : pickRandomFromDroppedPool();
 
+  /* ----- remove current wallpaper ----- */
   async function removeCurrentWallpaper(){
     if(!currentPoolKey) return;
     await idbDelete(currentPoolKey);
@@ -502,6 +559,7 @@ const ICON_ART = {
     else showEmptyPoolNote();
   }
 
+  /* ----- check folder permission ----- */
   async function verifyPermission(handle){
     const opts = {mode:'read'};
     if((await handle.queryPermission(opts)) === 'granted') return true;
@@ -509,10 +567,13 @@ const ICON_ART = {
   }
 
   const wallpaperInput = document.getElementById('wallpaper-input');
+  /* ----- file chooser instead of folder picker ----- */
   const useImageChooser = ()=> !('showDirectoryPicker' in window) || matchMedia('(pointer: coarse)').matches;
 
+  /* ----- file identity for duplicates ----- */
   const fileSignature = f => `${f.name}|${f.size}|${f.lastModified}`;
 
+  /* ----- identities of stored images ----- */
   async function poolSignatures(){
     const known = new Map();
     for(const key of await idbAllKeysWithPrefix('dropped:')){
@@ -522,6 +583,7 @@ const ICON_ART = {
     return known;
   }
 
+  /* ----- add images to the rotation ----- */
   async function addImages(fileList){
     const files = Array.from(fileList).filter(f=> f.type.startsWith('image/') || IMG_RE.test(f.name));
     if(files.length === 0){
@@ -549,6 +611,7 @@ const ICON_ART = {
     }
   }
 
+  /* ----- first wallpaper on load ----- */
   async function initWallpaper(){
     showCachedInstantly();
 
@@ -580,6 +643,7 @@ const ICON_ART = {
     }
   }
 
+  /* ----- pick folder or images ----- */
   async function chooseWallpaper(){
     if(useImageChooser()){
       wallpaperInput.click();
@@ -608,50 +672,66 @@ const ICON_ART = {
   const wpNext = document.getElementById('wp-next');
   const wpAdd = document.getElementById('wp-add');
   const wpRemove = document.getElementById('wp-remove');
+  /* ----- close wallpaper buttons ----- */
   function closeWallpaperMenu(){ wallpaperMenu.classList.remove('open'); }
+  /* ----- is folder mode active ----- */
   const usingFolder = ()=> !useImageChooser() && !!dirHandle && !needsReconnect;
+  /* ----- update wallpaper buttons ----- */
   function refreshWallpaperMenu(){
     wpAdd.title = wpAdd.ariaLabel = useImageChooser() ? 'Add images' : 'Choose folder';
     wpNext.hidden = !(usingFolder() || currentPoolKey);
     wpRemove.hidden = !currentPoolKey;
   }
+  /* ----- gear button ----- */
   wallpaperBtn.addEventListener('click', ()=>{
     refreshWallpaperMenu();
     wallpaperMenu.classList.toggle('open');
     closeEngineMenu();
   });
+  /* ----- reload button ----- */
   wpNext.addEventListener('click', async ()=>{ await showAnother(); refreshWallpaperMenu(); });
+  /* ----- add images button ----- */
   wpAdd.addEventListener('click', ()=>{ closeWallpaperMenu(); chooseWallpaper(); });
+  /* ----- delete button ----- */
   wpRemove.addEventListener('click', ()=>{ closeWallpaperMenu(); removeCurrentWallpaper(); });
+  /* ----- click outside closes wallpaper buttons ----- */
   document.addEventListener('click', e=>{
     const path = e.composedPath();
     if(!path.includes(wallpaperMenu) && !path.includes(wallpaperBtn)) closeWallpaperMenu();
   });
+  /* ----- Escape closes wallpaper buttons ----- */
   document.addEventListener('keydown', e=>{ if(e.key === 'Escape') closeWallpaperMenu(); });
+  /* ----- note button ----- */
   noteAction.addEventListener('click', chooseWallpaper);
 
   /* ---------- drag & drop fallback ---------- */
   const dropHint = document.getElementById('drop-hint');
   let dragCounter = 0;
+  /* ----- show drop hint ----- */
   document.addEventListener('dragenter', (e)=>{
     e.preventDefault(); dragCounter++;
     dropHint.classList.add('show');
   });
+  /* ----- hide drop hint ----- */
   document.addEventListener('dragleave', ()=>{
     dragCounter--; if(dragCounter<=0){ dragCounter=0; dropHint.classList.remove('show'); }
   });
+  /* ----- allow dropping ----- */
   document.addEventListener('dragover', (e)=> e.preventDefault());
+  /* ----- add dropped images ----- */
   document.addEventListener('drop', async (e)=>{
     e.preventDefault();
     dragCounter = 0;
     dropHint.classList.remove('show');
     await addImages(e.dataTransfer.files);
   });
+  /* ----- add chosen images ----- */
   wallpaperInput.addEventListener('change', async ()=>{
     await addImages(wallpaperInput.files);
     wallpaperInput.value = '';
   });
 
+  /* ----- start the wallpaper ----- */
   initWallpaper();
 
 })();
