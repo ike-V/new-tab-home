@@ -55,9 +55,13 @@ Install: [Chrome Web Store](https://chromewebstore.google.com/detail/new-tab/mil
 
 ## Screenshots
 
-![Clock, date, and search bar over a green marbled wallpaper, with the wallpaper buttons open: settings, add images, show another, remove](screenshots/full-page.png)
+![Clock, date, and search bar over a green marbled wallpaper, with the wallpaper buttons open: settings, add images, show another, remove, hide the clock, hide the search bar](screenshots/full-page.png)
 
 ![Search engine menu open, showing Browser default, Google, Bing, DuckDuckGo, Startpage, Brave, Wikipedia, Reddit and Wallhaven with pixel-art icons](screenshots/engine-picker.png)
+
+The last two buttons hide and show the clock and the search bar:
+
+![The clock and date disappear, then the search bar, leaving only the wallpaper; both then come back](screenshots/hide-clock-and-search.gif)
 
 ## Requirements
 
